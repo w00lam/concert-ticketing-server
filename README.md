@@ -185,6 +185,7 @@ Spring MVC 레벨 예외도 글로벌 핸들러에서 공통 에러 응답으로
 ## Documentation
 
 - [API Response Policy](docs/api-response-policy.md)
+- [Refactoring Summary](docs/refactoring-summary.md)
 - [OpenAPI Spec](docs/openapi.yml)
 - [ERD](docs/erd.md)
 - [Infrastructure](docs/infra.md)
