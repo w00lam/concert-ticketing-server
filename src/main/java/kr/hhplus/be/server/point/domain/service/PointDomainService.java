@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.point.domain.service;
 
 import kr.hhplus.be.server.point.domain.model.Point;
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.user.domain.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

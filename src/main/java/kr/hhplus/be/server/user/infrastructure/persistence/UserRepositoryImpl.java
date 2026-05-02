@@ -1,8 +1,7 @@
-package kr.hhplus.be.server.infrastructure.persistence.user.adapter;
+package kr.hhplus.be.server.user.infrastructure.persistence;
 
-import kr.hhplus.be.server.application.user.port.out.UserRepositoryPort;
-import kr.hhplus.be.server.domain.user.model.User;
-import kr.hhplus.be.server.infrastructure.persistence.jpa.JpaUserRepository;
+import kr.hhplus.be.server.user.application.port.out.UserRepositoryPort;
+import kr.hhplus.be.server.user.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

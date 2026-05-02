@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.unit.domain.user.model;
 
 import kr.hhplus.be.server.unit.BaseUnitTest;
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.user.domain.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

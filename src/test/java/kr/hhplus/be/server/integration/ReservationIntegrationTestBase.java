@@ -14,7 +14,7 @@ import kr.hhplus.be.server.concert.domain.model.Concert;
 import kr.hhplus.be.server.concert.domain.model.ConcertDate;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import kr.hhplus.be.server.payment.domain.model.PaymentMethod;
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.user.domain.model.User;
 
 import kr.hhplus.be.server.concert.infrastructure.persistence.ConcertDateRepositoryImpl;
 import kr.hhplus.be.server.concert.infrastructure.persistence.ConcertRepositoryImpl;
@@ -23,7 +23,7 @@ import kr.hhplus.be.server.payment.infrastructure.persistence.PaymentRepositoryI
 import kr.hhplus.be.server.point.infrastructure.persistence.PointRepositoryImpl;
 import kr.hhplus.be.server.tokenqueue.infrastructure.persistence.TokenQueueRepositoryImpl;
 import kr.hhplus.be.server.reservation.infrastructure.persistence.ReservationRepositoryImpl;
-import kr.hhplus.be.server.infrastructure.persistence.user.adapter.UserRepositoryImpl;
+import kr.hhplus.be.server.user.infrastructure.persistence.UserRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;

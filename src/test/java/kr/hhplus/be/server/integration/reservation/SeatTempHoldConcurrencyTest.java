@@ -5,7 +5,7 @@ import kr.hhplus.be.server.concert.domain.model.ConcertDate;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import kr.hhplus.be.server.reservation.domain.model.Reservation;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.user.domain.model.User;
 import kr.hhplus.be.server.reservation.infrastructure.persistence.JpaReservationRepository;
 import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
 import org.junit.jupiter.api.DisplayName;

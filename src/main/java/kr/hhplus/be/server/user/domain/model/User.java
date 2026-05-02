@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.user.model;
+package kr.hhplus.be.server.user.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;

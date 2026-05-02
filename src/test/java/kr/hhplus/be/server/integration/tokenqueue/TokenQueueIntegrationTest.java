@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.integration.tokenqueue;
 
 import kr.hhplus.be.server.tokenqueue.application.port.in.TokenQueueUseCase;
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.user.domain.model.User;
 import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

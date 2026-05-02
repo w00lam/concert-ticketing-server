@@ -7,11 +7,11 @@ import kr.hhplus.be.server.reservation.application.port.in.ConfirmReservationUse
 import kr.hhplus.be.server.reservation.application.port.in.MakeReservationCommand;
 import kr.hhplus.be.server.reservation.application.port.in.MakeReservationUseCase;
 import kr.hhplus.be.server.reservation.application.port.out.ReservationRepositoryPort;
-import kr.hhplus.be.server.application.user.port.out.UserRepositoryPort;
+import kr.hhplus.be.server.user.application.port.out.UserRepositoryPort;
 import kr.hhplus.be.server.concert.domain.model.Concert;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.user.domain.model.User;
 import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

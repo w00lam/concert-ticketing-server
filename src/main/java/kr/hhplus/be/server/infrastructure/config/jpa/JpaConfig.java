@@ -10,11 +10,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @EnableJpaAuditing
 @EnableJpaRepositories(basePackages = {
-        "kr.hhplus.be.server.infrastructure.persistence.jpa",
         "kr.hhplus.be.server.reservation.infrastructure.persistence",
         "kr.hhplus.be.server.payment.infrastructure.persistence",
         "kr.hhplus.be.server.point.infrastructure.persistence",
-        "kr.hhplus.be.server.concert.infrastructure.persistence"
+        "kr.hhplus.be.server.concert.infrastructure.persistence",
+        "kr.hhplus.be.server.user.infrastructure.persistence"
 })
 public class JpaConfig {
 

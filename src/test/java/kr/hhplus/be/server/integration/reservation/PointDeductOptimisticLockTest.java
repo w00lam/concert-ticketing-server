@@ -2,8 +2,8 @@ package kr.hhplus.be.server.integration.reservation;
 
 import kr.hhplus.be.server.point.application.port.in.DeductPointCommand;
 import kr.hhplus.be.server.point.application.port.in.DeductPointUseCase;
-import kr.hhplus.be.server.domain.user.model.User;
-import kr.hhplus.be.server.infrastructure.persistence.user.adapter.UserRepositoryImpl;
+import kr.hhplus.be.server.user.domain.model.User;
+import kr.hhplus.be.server.user.infrastructure.persistence.UserRepositoryImpl;
 import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

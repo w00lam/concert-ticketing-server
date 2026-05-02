@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.point.domain.model;
 
 import jakarta.persistence.*;
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.user.domain.model.User;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

@@ -1,6 +1,6 @@
-package kr.hhplus.be.server.application.user.port.out;
+package kr.hhplus.be.server.user.application.port.out;
 
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.user.domain.model.User;
 
 import java.util.UUID;
 

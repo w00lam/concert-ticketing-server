@@ -1,6 +1,6 @@
-package kr.hhplus.be.server.infrastructure.persistence.jpa;
+package kr.hhplus.be.server.user.infrastructure.persistence;
 
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.user.domain.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

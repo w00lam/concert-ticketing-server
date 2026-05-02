@@ -4,10 +4,10 @@ import kr.hhplus.be.server.point.application.port.in.ChargePointCommand;
 import kr.hhplus.be.server.point.application.port.in.ChargePointResult;
 import kr.hhplus.be.server.point.application.port.in.ChargePointUseCase;
 import kr.hhplus.be.server.point.application.port.out.PointRepositoryPort;
-import kr.hhplus.be.server.application.user.port.out.UserRepositoryPort;
+import kr.hhplus.be.server.user.application.port.out.UserRepositoryPort;
 import kr.hhplus.be.server.point.domain.model.Point;
 import kr.hhplus.be.server.point.domain.service.PointDomainService;
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.user.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
