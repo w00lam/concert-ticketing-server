@@ -3,6 +3,7 @@ package kr.hhplus.be.server.reservation.domain.model;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.user.domain.model.User;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -73,7 +74,7 @@ public class Reservation {
     }
     public void cancel() {
         if (this.status == ReservationStatus.CANCELED) {
-            throw new BusinessRuleViolationException("Already cancelled");
+            throw new BusinessRuleViolationException(ErrorCode.RESERVATION_ALREADY_CANCELLED, "이미 취소된 예약입니다.");
         }
 
         this.status = ReservationStatus.CANCELED;

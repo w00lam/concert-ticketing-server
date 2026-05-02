@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.user.infrastructure.persistence;
 
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.exception.ResourceNotFoundException;
 import kr.hhplus.be.server.user.application.port.out.UserRepositoryPort;
 import kr.hhplus.be.server.user.domain.model.User;
@@ -20,6 +21,6 @@ public class UserRepositoryImpl implements UserRepositoryPort {
 
     @Override
     public User findById(UUID userId) {
-        return jpa.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", userId));
+        return jpa.findById(userId).orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다: " + userId));
     }
 }

@@ -18,29 +18,29 @@ public class GlobalExceptionHandlerTest extends BaseUnitTest {
     @Test
     @DisplayName("handleClientInput: returns bad request problem with stable code")
     void handleClientInput() {
-        var problem = handler.handleClientInput(new ClientInputException("Request is required"));
+        var problem = handler.handleClientInput(new ClientInputException(ErrorCode.REQUEST_BODY_REQUIRED, "요청 본문은 필수입니다."));
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), problem.getStatus());
-        assertEquals("Request is required", problem.getDetail());
-        assertEquals(ErrorCode.CLIENT_INPUT_ERROR.name(), problem.getProperties().get("code"));
+        assertEquals("요청 본문은 필수입니다.", problem.getDetail());
+        assertEquals(ErrorCode.REQUEST_BODY_REQUIRED.name(), problem.getProperties().get("code"));
     }
 
     @Test
     @DisplayName("handleResourceNotFound: returns not found problem with stable code")
     void handleResourceNotFound() {
-        var problem = handler.handleResourceNotFound(new ResourceNotFoundException("User", fixedUUID()));
+        var problem = handler.handleResourceNotFound(new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
 
         assertEquals(HttpStatus.NOT_FOUND.value(), problem.getStatus());
-        assertEquals(ErrorCode.RESOURCE_NOT_FOUND.name(), problem.getProperties().get("code"));
+        assertEquals(ErrorCode.USER_NOT_FOUND.name(), problem.getProperties().get("code"));
     }
 
     @Test
     @DisplayName("handleBusinessRuleViolation: returns conflict problem with stable code")
     void handleBusinessRuleViolation() {
-        var problem = handler.handleBusinessRuleViolation(new BusinessRuleViolationException("Already cancelled"));
+        var problem = handler.handleBusinessRuleViolation(new BusinessRuleViolationException(ErrorCode.RESERVATION_ALREADY_CANCELLED, "이미 취소된 예약입니다."));
 
         assertEquals(HttpStatus.CONFLICT.value(), problem.getStatus());
-        assertEquals("Already cancelled", problem.getDetail());
-        assertEquals(ErrorCode.BUSINESS_RULE_VIOLATION.name(), problem.getProperties().get("code"));
+        assertEquals("이미 취소된 예약입니다.", problem.getDetail());
+        assertEquals(ErrorCode.RESERVATION_ALREADY_CANCELLED.name(), problem.getProperties().get("code"));
     }
 }

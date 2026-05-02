@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.reservation.infrastructure.persistence;
 
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.common.exception.ResourceNotFoundException;
 import kr.hhplus.be.server.reservation.application.port.out.ReservationRepositoryPort;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
@@ -18,7 +19,7 @@ public class ReservationRepositoryImpl implements ReservationRepositoryPort {
     @Override
     public Reservation findById(UUID reservationId) {
         return jpa.findById(reservationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Reservation", reservationId));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.RESERVATION_NOT_FOUND, "예약을 찾을 수 없습니다: " + reservationId));
     }
 
     @Override

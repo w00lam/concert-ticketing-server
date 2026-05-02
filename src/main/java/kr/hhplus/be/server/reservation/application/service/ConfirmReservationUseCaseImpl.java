@@ -2,6 +2,7 @@ package kr.hhplus.be.server.reservation.application.service;
 
 import kr.hhplus.be.server.application.event.DomainEventPublisher;
 import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEvent;
 import kr.hhplus.be.server.reservation.application.port.in.ConfirmReservationCommand;
 import kr.hhplus.be.server.reservation.application.port.in.ConfirmReservationResult;
@@ -23,7 +24,7 @@ public class ConfirmReservationUseCaseImpl implements ConfirmReservationUseCase 
         boolean success = reservationRepository.confirmIfNotExpired(command.reservationId());
 
         if (!success) {
-            throw new BusinessRuleViolationException("Reservation expired or already processed");
+            throw new BusinessRuleViolationException(ErrorCode.RESERVATION_EXPIRED_OR_PROCESSED, "예약이 만료되었거나 이미 처리되었습니다.");
         }
 
         var reservation = reservationRepository.findById(command.reservationId());

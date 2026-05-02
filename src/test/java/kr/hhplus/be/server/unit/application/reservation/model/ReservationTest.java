@@ -53,6 +53,6 @@ public class ReservationTest extends BaseUnitTest {
         // when & then
         assertThatThrownBy(reservation::cancel)
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Already cancelled");
+                .hasMessage("이미 취소된 예약입니다.");
     }
 }

@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.point.presentation.controller;
 
 import kr.hhplus.be.server.common.exception.ClientInputException;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.point.application.port.in.ChargePointCommand;
 import kr.hhplus.be.server.point.application.port.in.ChargePointUseCase;
 import kr.hhplus.be.server.point.application.port.in.GetPointQuery;
@@ -40,8 +41,8 @@ public class PointController {
 
     private void validateChargeRequest(ChargePointRequest request) {
         // Keep transport validation here so application use cases receive a complete command.
-        if (request == null) throw new ClientInputException("Request is required");
-        if (request.user() == null) throw new ClientInputException("UserId is required");
-        if (request.amount() <= 0) throw new ClientInputException("Amount must be positive");
+        if (request == null) throw new ClientInputException(ErrorCode.REQUEST_BODY_REQUIRED, "요청 본문은 필수입니다.");
+        if (request.user() == null) throw new ClientInputException(ErrorCode.USER_ID_REQUIRED, "사용자 ID는 필수입니다.");
+        if (request.amount() <= 0) throw new ClientInputException(ErrorCode.AMOUNT_MUST_BE_POSITIVE, "금액은 0보다 커야 합니다.");
     }
 }
