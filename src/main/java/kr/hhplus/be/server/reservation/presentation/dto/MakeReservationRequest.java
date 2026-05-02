@@ -1,6 +1,12 @@
 package kr.hhplus.be.server.reservation.presentation.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.UUID;
 
-public record MakeReservationRequest(UUID userId, UUID concertId, UUID seatId) {
+public record MakeReservationRequest(
+        @NotNull UUID userId,
+        @NotNull UUID concertId,
+        @NotNull UUID seatId
+) {
 }

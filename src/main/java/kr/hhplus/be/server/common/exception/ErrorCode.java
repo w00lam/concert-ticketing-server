@@ -12,6 +12,7 @@ public enum ErrorCode {
     PAYMENT_METHOD_REQUIRED,
     INVALID_REQUEST_BODY,
     INVALID_REQUEST_PARAMETER,
+    INVALID_REQUEST_FIELD,
 
     // Requested aggregate or resource cannot be found.
     RESOURCE_NOT_FOUND,

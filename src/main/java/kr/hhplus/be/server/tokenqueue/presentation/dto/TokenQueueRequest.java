@@ -1,5 +1,9 @@
 package kr.hhplus.be.server.tokenqueue.presentation.dto;
 
-public record TokenQueueRequest(String userId) {
+import jakarta.validation.constraints.NotBlank;
+
+public record TokenQueueRequest(
+        @NotBlank String userId
+) {
 }
 

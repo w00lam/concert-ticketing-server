@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.reservation.presentation.controller;
 
-import kr.hhplus.be.server.common.exception.ClientInputException;
-import kr.hhplus.be.server.common.exception.ErrorCode;
+import jakarta.validation.Valid;
 import kr.hhplus.be.server.common.presentation.ApiResponse;
 import kr.hhplus.be.server.reservation.application.port.in.ConfirmReservationCommand;
 import kr.hhplus.be.server.reservation.application.port.in.ConfirmReservationUseCase;
@@ -12,7 +11,11 @@ import kr.hhplus.be.server.reservation.presentation.dto.MakeReservationRequest;
 import kr.hhplus.be.server.reservation.presentation.dto.MakeReservationResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -24,8 +27,7 @@ public class ReservationController {
     private final ConfirmReservationUseCase confirmReservationUseCase;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<MakeReservationResponse>> makeReservation(@RequestBody MakeReservationRequest request) {
-        validateMakeReservationRequest(request);
+    public ResponseEntity<ApiResponse<MakeReservationResponse>> makeReservation(@Valid @RequestBody MakeReservationRequest request) {
         var result = makeReservationUseCase.execute(new MakeReservationCommand(request.userId(), request.concertId(), request.seatId()));
         var response = MakeReservationResponse.from(result);
 
@@ -38,13 +40,5 @@ public class ReservationController {
         var response = ConfirmReservationResponse.from(result);
 
         return ResponseEntity.ok(ApiResponse.ok(response));
-    }
-
-    private void validateMakeReservationRequest(MakeReservationRequest request) {
-        // Keep HTTP boundary validation explicit before delegating to the use case.
-        if (request == null) throw new ClientInputException(ErrorCode.REQUEST_BODY_REQUIRED, "요청 본문은 필수입니다.");
-        if (request.userId() == null) throw new ClientInputException(ErrorCode.USER_ID_REQUIRED, "사용자 ID는 필수입니다.");
-        if (request.concertId() == null) throw new ClientInputException(ErrorCode.CONCERT_ID_REQUIRED, "콘서트 ID는 필수입니다.");
-        if (request.seatId() == null) throw new ClientInputException(ErrorCode.SEAT_ID_REQUIRED, "좌석 ID는 필수입니다.");
     }
 }

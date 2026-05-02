@@ -1,13 +1,17 @@
 package kr.hhplus.be.server.tokenqueue.presentation.controller;
 
-import kr.hhplus.be.server.common.exception.ClientInputException;
-import kr.hhplus.be.server.common.exception.ErrorCode;
+import jakarta.validation.Valid;
 import kr.hhplus.be.server.common.presentation.ApiResponse;
 import kr.hhplus.be.server.tokenqueue.application.port.in.TokenQueueUseCase;
 import kr.hhplus.be.server.tokenqueue.presentation.dto.TokenQueueRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,15 +20,16 @@ public class TokenQueueController {
     private final TokenQueueUseCase tokenQueueUseCase;
 
     @PostMapping("/enqueue")
-    public ResponseEntity<ApiResponse<Void>> enqueue(@RequestBody TokenQueueRequest request) {
-        validateTokenQueueRequest(request);
+    public ResponseEntity<ApiResponse<Void>> enqueue(@Valid @RequestBody TokenQueueRequest request) {
         tokenQueueUseCase.enqueueUser(request.userId());
+
         return ResponseEntity.ok(ApiResponse.ok());
     }
 
     @PostMapping("/dequeue")
     public ResponseEntity<ApiResponse<Void>> dequeue() {
         tokenQueueUseCase.dequeueUser();
+
         return ResponseEntity.ok(ApiResponse.ok());
     }
 
@@ -41,11 +46,5 @@ public class TokenQueueController {
     @GetMapping("/next")
     public ResponseEntity<ApiResponse<String>> getNextUser() {
         return ResponseEntity.ok(ApiResponse.ok(tokenQueueUseCase.getNextUser()));
-    }
-
-    private void validateTokenQueueRequest(TokenQueueRequest request) {
-        // Token queue commands require an explicit user id at the HTTP boundary.
-        if (request == null) throw new ClientInputException(ErrorCode.REQUEST_BODY_REQUIRED, "요청 본문은 필수입니다.");
-        if (request.userId() == null || request.userId().isBlank()) throw new ClientInputException(ErrorCode.USER_ID_REQUIRED, "사용자 ID는 필수입니다.");
     }
 }

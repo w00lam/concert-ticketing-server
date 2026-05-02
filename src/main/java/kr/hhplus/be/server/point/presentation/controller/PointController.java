@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.point.presentation.controller;
 
-import kr.hhplus.be.server.common.exception.ClientInputException;
-import kr.hhplus.be.server.common.exception.ErrorCode;
+import jakarta.validation.Valid;
 import kr.hhplus.be.server.common.presentation.ApiResponse;
 import kr.hhplus.be.server.point.application.port.in.ChargePointCommand;
 import kr.hhplus.be.server.point.application.port.in.ChargePointUseCase;
@@ -12,7 +11,12 @@ import kr.hhplus.be.server.point.presentation.dto.ChargePointResponse;
 import kr.hhplus.be.server.point.presentation.dto.GetPointResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -24,9 +28,8 @@ public class PointController {
     private final GetPointUseCase getPointUseCase;
 
     @PostMapping("/charge")
-    public ResponseEntity<ApiResponse<ChargePointResponse>> chargePoint(@RequestBody ChargePointRequest request) {
-        validateChargeRequest(request);
-        var result = chargePointUseCase.execute(new ChargePointCommand(request.user().getId(), request.amount()));
+    public ResponseEntity<ApiResponse<ChargePointResponse>> chargePoint(@Valid @RequestBody ChargePointRequest request) {
+        var result = chargePointUseCase.execute(new ChargePointCommand(request.userId(), request.amount()));
         var response = ChargePointResponse.from(result);
 
         return ResponseEntity.ok(ApiResponse.ok(response));
@@ -38,12 +41,5 @@ public class PointController {
         var response = GetPointResponse.from(result);
 
         return ResponseEntity.ok(ApiResponse.ok(response));
-    }
-
-    private void validateChargeRequest(ChargePointRequest request) {
-        // Keep transport validation here so application use cases receive a complete command.
-        if (request == null) throw new ClientInputException(ErrorCode.REQUEST_BODY_REQUIRED, "요청 본문은 필수입니다.");
-        if (request.user() == null) throw new ClientInputException(ErrorCode.USER_ID_REQUIRED, "사용자 ID는 필수입니다.");
-        if (request.amount() <= 0) throw new ClientInputException(ErrorCode.AMOUNT_MUST_BE_POSITIVE, "금액은 0보다 커야 합니다.");
     }
 }
