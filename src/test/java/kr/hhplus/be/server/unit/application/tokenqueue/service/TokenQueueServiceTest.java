@@ -1,9 +1,9 @@
 package kr.hhplus.be.server.unit.application.tokenqueue.service;
 
-import kr.hhplus.be.server.application.tokenqueue.port.in.TokenQueueUseCase;
-import kr.hhplus.be.server.application.tokenqueue.port.out.TokenQueueRepositoryPort;
-import kr.hhplus.be.server.application.tokenqueue.service.TokenQueueUseCaseImpl;
-import kr.hhplus.be.server.infrastructure.persistence.tokenqueue.adapter.TokenQueueRepositoryImpl;
+import kr.hhplus.be.server.tokenqueue.application.port.in.TokenQueueUseCase;
+import kr.hhplus.be.server.tokenqueue.application.port.out.TokenQueueRepositoryPort;
+import kr.hhplus.be.server.tokenqueue.application.service.TokenQueueUseCaseImpl;
+import kr.hhplus.be.server.tokenqueue.infrastructure.persistence.TokenQueueRepositoryImpl;
 import kr.hhplus.be.server.unit.BaseUnitTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

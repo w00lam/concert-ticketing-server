@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.unit.application.concert.service;
 
-import kr.hhplus.be.server.application.concert.port.out.SeatRepositoryPort;
-import kr.hhplus.be.server.application.concert.service.SeatHoldReleaseScheduler;
-import kr.hhplus.be.server.domain.concert.model.seat.Seat;
+import kr.hhplus.be.server.concert.application.port.out.SeatRepositoryPort;
+import kr.hhplus.be.server.concert.application.service.SeatHoldReleaseScheduler;
+import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

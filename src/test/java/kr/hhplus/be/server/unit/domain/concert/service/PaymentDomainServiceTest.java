@@ -1,10 +1,10 @@
 package kr.hhplus.be.server.unit.domain.concert.service;
 
-import kr.hhplus.be.server.domain.payment.model.Payment;
-import kr.hhplus.be.server.domain.payment.model.PaymentMethod;
-import kr.hhplus.be.server.domain.payment.model.PaymentStatus;
-import kr.hhplus.be.server.domain.payment.service.PaymentDomainService;
-import kr.hhplus.be.server.domain.reservation.model.Reservation;
+import kr.hhplus.be.server.payment.domain.model.Payment;
+import kr.hhplus.be.server.payment.domain.model.PaymentMethod;
+import kr.hhplus.be.server.payment.domain.model.PaymentStatus;
+import kr.hhplus.be.server.payment.domain.service.PaymentDomainService;
+import kr.hhplus.be.server.reservation.domain.model.Reservation;
 import kr.hhplus.be.server.unit.BaseUnitTest;
 import org.junit.jupiter.api.*;
 

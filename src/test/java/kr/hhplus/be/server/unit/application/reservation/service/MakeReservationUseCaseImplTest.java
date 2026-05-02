@@ -1,11 +1,11 @@
 package kr.hhplus.be.server.unit.application.reservation.service;
 
-import kr.hhplus.be.server.application.reservation.port.in.MakeReservationCommand;
-import kr.hhplus.be.server.application.reservation.port.in.MakeReservationResult;
-import kr.hhplus.be.server.application.reservation.service.MakeReservationUseCaseImpl;
-import kr.hhplus.be.server.application.reservation.service.ReservationTxService;
-import kr.hhplus.be.server.domain.concert.model.seat.SeatLockKey;
-import kr.hhplus.be.server.domain.reservation.model.ReservationStatus;
+import kr.hhplus.be.server.reservation.application.port.in.MakeReservationCommand;
+import kr.hhplus.be.server.reservation.application.port.in.MakeReservationResult;
+import kr.hhplus.be.server.reservation.application.service.MakeReservationUseCaseImpl;
+import kr.hhplus.be.server.reservation.application.service.ReservationTxService;
+import kr.hhplus.be.server.concert.domain.model.seat.SeatLockKey;
+import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
 import kr.hhplus.be.server.infrastructure.lock.DistributedLockManager;
 import kr.hhplus.be.server.unit.BaseUnitTest;
 import org.junit.jupiter.api.DisplayName;

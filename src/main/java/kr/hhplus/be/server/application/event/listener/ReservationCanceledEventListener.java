@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.application.event.listener;
 
 import kr.hhplus.be.server.application.event.port.out.DataPlatformClientPort;
-import kr.hhplus.be.server.application.reservation.event.ReservationCanceledEvent;
+import kr.hhplus.be.server.reservation.application.event.ReservationCanceledEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;

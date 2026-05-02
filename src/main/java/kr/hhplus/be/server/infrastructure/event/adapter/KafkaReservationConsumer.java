@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.infrastructure.event.adapter;
 
 import kr.hhplus.be.server.application.event.port.out.DataPlatformClientPort;
-import kr.hhplus.be.server.application.reservation.event.ReservationConfirmedEvent;
+import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

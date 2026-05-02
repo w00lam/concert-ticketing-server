@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.application.event.listener;
 
 import kr.hhplus.be.server.application.event.port.out.ReservationEventProducerPort;
-import kr.hhplus.be.server.application.reservation.event.ReservationConfirmedEvent;
+import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;

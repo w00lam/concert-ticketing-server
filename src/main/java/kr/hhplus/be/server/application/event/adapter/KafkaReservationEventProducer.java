@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.application.event.adapter;
 
 import kr.hhplus.be.server.application.event.port.out.ReservationEventProducerPort;
-import kr.hhplus.be.server.application.reservation.event.ReservationConfirmedEvent;
+import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

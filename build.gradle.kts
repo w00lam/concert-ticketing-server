@@ -64,7 +64,7 @@ tasks.withType<Test> {
 
 tasks.test {
     // Keep the default test task runnable without Docker or local MySQL/Redis/Kafka.
-    exclude("**/intergration/**")
+    exclude("**/integration/**")
     exclude("**/ServerApplicationTests.class")
 }
 
@@ -75,8 +75,8 @@ tasks.register<Test>("integrationTest") {
     useJUnitPlatform()
     systemProperty("user.timezone", "UTC")
 
-    // The project currently uses the misspelled package name 'intergration', so keep the pattern aligned with it.
-    include("**/intergration/**")
+    // Infrastructure tests are isolated because they need Docker/Testcontainers.
+    include("**/integration/**")
     include("**/ServerApplicationTests.class")
     shouldRunAfter(tasks.test)
 }
