@@ -1,5 +1,8 @@
 package kr.hhplus.be.server.point.presentation.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.hhplus.be.server.common.presentation.ApiResponse;
 import kr.hhplus.be.server.point.application.port.in.ChargePointCommand;
@@ -23,11 +26,13 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/points")
+@Tag(name = "Point", description = "포인트 충전 및 잔액 조회 API")
 public class PointController {
     private final ChargePointUseCase chargePointUseCase;
     private final GetPointUseCase getPointUseCase;
 
     @PostMapping("/charge")
+    @Operation(summary = "포인트 충전", description = "사용자에게 포인트를 충전합니다.")
     public ResponseEntity<ApiResponse<ChargePointResponse>> chargePoint(@Valid @RequestBody ChargePointRequest request) {
         var result = chargePointUseCase.execute(new ChargePointCommand(request.userId(), request.amount()));
         var response = ChargePointResponse.from(result);
@@ -36,7 +41,10 @@ public class PointController {
     }
 
     @GetMapping("/{userId}/balance")
-    public ResponseEntity<ApiResponse<GetPointResponse>> getPoint(@PathVariable UUID userId) {
+    @Operation(summary = "포인트 잔액 조회", description = "사용자의 현재 포인트 잔액을 조회합니다.")
+    public ResponseEntity<ApiResponse<GetPointResponse>> getPoint(
+            @Parameter(description = "사용자 ID", required = true) @PathVariable UUID userId
+    ) {
         var result = getPointUseCase.execute(new GetPointQuery(userId));
         var response = GetPointResponse.from(result);
 
