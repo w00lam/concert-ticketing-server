@@ -181,7 +181,20 @@ docker compose up -d
 ./gradlew bootRun
 ```
 
-기본 로컬 프로필은 `localhost:3306`, `localhost:6379`, `localhost:9092`를 사용합니다. 자세한 실행 절차는 [Local Development Guide](docs/local-dev-guide.md)를 참고하세요.
+기본 프로필은 `local`이며 `localhost:3306`, `localhost:6379`, `localhost:9092`를 사용합니다. 자세한 실행 절차는 [Local Development Guide](docs/local-dev-guide.md)를 참고하세요.
+
+## Environment Profiles
+
+환경별 설정은 프로필 파일로 분리합니다.
+
+| Profile | File | Purpose |
+| --- | --- | --- |
+| default | `application.yml` | 공통 애플리케이션, datasource, JPA 기본값 |
+| local | `application-local.yml` | Docker Compose 기반 로컬 인프라 연결 |
+| test | `src/test/resources/application-test.yml` | 테스트용 MySQL, Redis, Embedded Kafka 연결 |
+| prod | `application-prod.yml` | 운영 환경변수 기반 인프라 연결 |
+
+운영 실행 시에는 `SPRING_PROFILES_ACTIVE=prod`와 `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `REDIS_HOST`, `KAFKA_BOOTSTRAP_SERVERS` 값을 주입합니다.
 
 ## API Docs
 

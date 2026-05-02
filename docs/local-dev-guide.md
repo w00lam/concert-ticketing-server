@@ -24,7 +24,7 @@ docker compose ps
 
 ## Run Application
 
-애플리케이션은 IDE 또는 Gradle로 실행합니다.
+애플리케이션은 IDE 또는 Gradle로 실행합니다. 별도 프로필을 지정하지 않으면 `local` 프로필이 기본으로 사용됩니다.
 
 ```bash
 ./gradlew bootRun
@@ -37,6 +37,18 @@ docker compose ps
 | MySQL | `localhost:3306` |
 | Redis | `localhost:6379` |
 | Kafka | `localhost:9092` |
+
+운영 환경처럼 명시적으로 프로필을 지정하려면 다음과 같이 실행합니다.
+
+```bash
+SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
+```
+
+PowerShell에서는 다음과 같이 실행합니다.
+
+```powershell
+$env:SPRING_PROFILES_ACTIVE="local"; .\gradlew.bat bootRun
+```
 
 ## API Docs
 
