@@ -169,11 +169,19 @@ Spring MVC 레벨 예외도 글로벌 핸들러에서 공통 에러 응답으로
 
 ## Local Run
 
+로컬 실행용 MySQL, Redis, Kafka는 Docker Compose로 먼저 실행합니다.
+
+```bash
+docker compose up -d
+```
+
+애플리케이션은 IDE 또는 Gradle로 실행합니다.
+
 ```bash
 ./gradlew bootRun
 ```
 
-로컬 실행에는 MySQL, Redis, Kafka 등 외부 인프라 설정이 필요할 수 있습니다.
+기본 로컬 프로필은 `localhost:3306`, `localhost:6379`, `localhost:9092`를 사용합니다. 자세한 실행 절차는 [Local Development Guide](docs/local-dev-guide.md)를 참고하세요.
 
 ## API Docs
 
@@ -184,6 +192,7 @@ Spring MVC 레벨 예외도 글로벌 핸들러에서 공통 에러 응답으로
 
 ## Documentation
 
+- [Local Development Guide](docs/local-dev-guide.md)
 - [API Response Policy](docs/api-response-policy.md)
 - [Refactoring Summary](docs/refactoring-summary.md)
 - [OpenAPI Spec](docs/openapi.yml)
