@@ -22,6 +22,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<MakeReservationResponse> makeReservation(@RequestBody MakeReservationRequest request) {
+        validateMakeReservationRequest(request);
         var result = makeReservationUseCase.execute(new MakeReservationCommand(request.userId(), request.concertId(), request.seatId()));
         var response = MakeReservationResponse.from(result);
 
@@ -34,5 +35,13 @@ public class ReservationController {
         var response = ConfirmReservationResponse.from(result);
 
         return ResponseEntity.ok(response);
+    }
+
+    private void validateMakeReservationRequest(MakeReservationRequest request) {
+        // Keep HTTP boundary validation explicit before delegating to the use case.
+        if (request == null) throw new IllegalArgumentException("Request is required");
+        if (request.userId() == null) throw new IllegalArgumentException("UserId is required");
+        if (request.concertId() == null) throw new IllegalArgumentException("ConcertId is required");
+        if (request.seatId() == null) throw new IllegalArgumentException("SeatId is required");
     }
 }

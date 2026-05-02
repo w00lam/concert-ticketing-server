@@ -14,6 +14,7 @@ public class TokenQueueController {
 
     @PostMapping("/enqueue")
     public ResponseEntity<Void> enqueue(@RequestBody TokenQueueRequest request) {
+        validateTokenQueueRequest(request);
         tokenQueueUseCase.enqueueUser(request.userId());
         return ResponseEntity.ok().build();
     }
@@ -37,5 +38,11 @@ public class TokenQueueController {
     @GetMapping("/next")
     public ResponseEntity<String> getNextUser() {
         return ResponseEntity.ok(tokenQueueUseCase.getNextUser());
+    }
+
+    private void validateTokenQueueRequest(TokenQueueRequest request) {
+        // Token queue commands require an explicit user id at the HTTP boundary.
+        if (request == null) throw new IllegalArgumentException("Request is required");
+        if (request.userId() == null || request.userId().isBlank()) throw new IllegalArgumentException("UserId is required");
     }
 }

@@ -19,8 +19,17 @@ public class PaymentController {
 
     @PostMapping
     public ResponseEntity<PaymentResponse> createPayment(@RequestBody PaymentRequest request) {
+        validatePaymentRequest(request);
         var result = makePaymentUseCase.execute(new MakePaymentCommand(request.reservationId(), request.amount(), request.method()));
         var response = PaymentResponse.from(result);
         return ResponseEntity.ok(response);
+    }
+
+    private void validatePaymentRequest(PaymentRequest request) {
+        // Validate controller input before constructing the application command.
+        if (request == null) throw new IllegalArgumentException("Request is required");
+        if (request.reservationId() == null) throw new IllegalArgumentException("ReservationId is required");
+        if (request.amount() <= 0) throw new IllegalArgumentException("Amount must be positive");
+        if (request.method() == null) throw new IllegalArgumentException("Payment method is required");
     }
 }
