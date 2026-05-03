@@ -182,6 +182,27 @@ Spring MVC 레벨 예외도 글로벌 핸들러에서 공통 에러 응답으로
 - 결제 흐름의 트랜잭션 경계 정리
 - 기본 단위 테스트와 Docker/Testcontainers 기반 통합 테스트 분리
 
+## Test Strategy
+
+테스트는 빠르게 피드백을 받을 수 있는 기본 테스트와 실제 인프라 경계를 검증하는 통합 테스트로 나누어 관리합니다.
+
+| Layer | Scope | Examples | Command |
+| --- | --- | --- | --- |
+| Unit | 도메인 규칙과 유스케이스 분기 검증 | 예약 생성, 결제 생성, 포인트 충전/차감, 대기열 입장 처리 | `./gradlew test` |
+| Application | 포트와 유스케이스 협력 검증 | 예약 요청 시 분산 락 획득/해제, 예약 확정 이벤트 발행 | `./gradlew test` |
+| Integration | 실제 DB/Redis/Kafka 연동 검증 | 좌석 선점, 예약 결제, Kafka 이벤트 소비, Redis 랭킹 반영 | `./gradlew integrationTest` |
+| Concurrency | 동시 요청에서 일관성 검증 | 동일 좌석 중복 예약 방지, 중복 결제 방지, 포인트 낙관적 락 | `./gradlew integrationTest` |
+
+기본 CI는 Docker 없이 실행 가능한 `test` task를 먼저 검증합니다. MySQL, Redis, Kafka가 필요한 테스트는 `integrationTest` task로 분리해 로컬 또는 인프라가 준비된 환경에서 실행할 수 있게 했습니다.
+
+주요 검증 포인트는 다음과 같습니다.
+
+- 동일 좌석에 여러 사용자가 동시에 접근해도 임시 배정은 1건만 성공해야 합니다.
+- 결제 요청이 동시에 들어와도 하나의 예약에 대해 결제는 중복 생성되지 않아야 합니다.
+- 포인트 차감은 낙관적 락을 통해 잔액 일관성을 유지해야 합니다.
+- 예약 확정 이벤트는 트랜잭션 완료 이후 Kafka 후처리 흐름으로 전달되어야 합니다.
+- Redis 기반 대기열과 랭킹은 실제 Redis 연동 상태에서 결과를 확인합니다.
+
 ## Verification Checklist
 
 | Check | Command or URL |
