@@ -50,6 +50,8 @@ PowerShell에서는 다음과 같이 실행합니다.
 $env:SPRING_PROFILES_ACTIVE="local"; .\gradlew.bat bootRun
 ```
 
+운영 프로필에서 필요한 환경변수 목록은 프로젝트 루트의 `.env.example`을 참고합니다. 실제 `.env` 파일은 Git에 포함하지 않습니다.
+
 ## API Docs
 
 애플리케이션 실행 후 다음 주소에서 API 문서를 확인합니다.

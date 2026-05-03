@@ -196,6 +196,8 @@ docker compose up -d
 
 운영 실행 시에는 `SPRING_PROFILES_ACTIVE=prod`와 `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `REDIS_HOST`, `KAFKA_BOOTSTRAP_SERVERS` 값을 주입합니다.
 
+환경변수 예시는 [.env.example](.env.example)에 정리되어 있습니다. 실제 `.env` 파일은 로컬 전용 비밀값이므로 Git에 포함하지 않습니다.
+
 ## API Docs
 
 로컬 실행 후 Swagger UI와 OpenAPI JSON을 확인할 수 있습니다.
