@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.reservation.application.service;
 
 import kr.hhplus.be.server.concert.application.port.out.SeatRepositoryPort;
+import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.reservation.application.port.in.MakeReservationCommand;
 import kr.hhplus.be.server.reservation.application.port.in.MakeReservationResult;
 import kr.hhplus.be.server.reservation.application.port.out.ReservationRepositoryPort;
@@ -36,7 +38,7 @@ public class ReservationTxService {
 
         // Active holds are the only records that should block a new temporary reservation.
         if (reservationRepositoryPort.existsActiveReservationBySeat(seat)) {
-            throw new RuntimeException("Seat is already being reserved");
+            throw new BusinessRuleViolationException(ErrorCode.SEAT_ALREADY_RESERVED, "이미 예약 중인 좌석입니다.");
         }
 
 

@@ -25,6 +25,7 @@ public enum ErrorCode {
 
     // Request is valid but blocked by current domain state.
     INSUFFICIENT_POINTS,
+    SEAT_ALREADY_RESERVED,
     RESERVATION_ALREADY_CANCELLED,
     RESERVATION_EXPIRED_OR_PROCESSED,
 
