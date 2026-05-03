@@ -57,6 +57,16 @@ $env:SPRING_PROFILES_ACTIVE="local"; .\gradlew.bat bootRun
 - Swagger UI: `http://localhost:8080/swagger-ui.html`
 - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
 
+## Health Check
+
+로컬 실행 후 Actuator health endpoint로 애플리케이션 상태를 확인합니다.
+
+```bash
+curl http://localhost:8080/actuator/health
+curl http://localhost:8080/actuator/health/liveness
+curl http://localhost:8080/actuator/health/readiness
+```
+
 ## Stop Infrastructure
 
 컨테이너만 종료합니다.

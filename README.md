@@ -203,6 +203,14 @@ docker compose up -d
 - Swagger UI: `http://localhost:8080/swagger-ui.html`
 - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
 
+## Health Check
+
+Actuator는 운영 상태 확인에 필요한 endpoint만 노출합니다.
+
+- Health: `http://localhost:8080/actuator/health`
+- Liveness: `http://localhost:8080/actuator/health/liveness`
+- Readiness: `http://localhost:8080/actuator/health/readiness`
+
 ## Documentation
 
 - [Local Development Guide](docs/local-dev-guide.md)
