@@ -6,7 +6,7 @@ import kr.hhplus.be.server.reservation.application.service.MakeReservationUseCas
 import kr.hhplus.be.server.reservation.application.service.ReservationTxService;
 import kr.hhplus.be.server.concert.domain.model.seat.SeatLockKey;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
-import kr.hhplus.be.server.infrastructure.lock.DistributedLockManager;
+import kr.hhplus.be.server.common.application.lock.DistributedLockManager;
 import kr.hhplus.be.server.unit.BaseUnitTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

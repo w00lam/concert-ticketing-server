@@ -5,7 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.concurrent.TimeUnit;
-import kr.hhplus.be.server.application.event.port.out.ReservationEventProducerPort;
+import kr.hhplus.be.server.reservation.application.port.out.ReservationEventProducerPort;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
 import kr.hhplus.be.server.payment.domain.model.PaymentMethod;

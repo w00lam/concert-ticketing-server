@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.reservation.application.service;
 
-import kr.hhplus.be.server.application.event.DomainEventPublisher;
+import kr.hhplus.be.server.common.application.event.DomainEventPublisher;
 import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.reservation.application.event.ReservationCanceledEvent;

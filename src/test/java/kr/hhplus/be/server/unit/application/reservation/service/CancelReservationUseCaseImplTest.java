@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.unit.application.reservation.service;
 
-import kr.hhplus.be.server.application.event.DomainEventPublisher;
+import kr.hhplus.be.server.common.application.event.DomainEventPublisher;
 import kr.hhplus.be.server.reservation.application.event.ReservationCanceledEvent;
 import kr.hhplus.be.server.reservation.application.port.in.CancelReservationCommand;
 import kr.hhplus.be.server.reservation.application.port.out.ReservationRepositoryPort;

@@ -5,7 +5,7 @@ import kr.hhplus.be.server.reservation.application.port.in.MakeReservationResult
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import kr.hhplus.be.server.payment.domain.model.PaymentMethod;
 import kr.hhplus.be.server.user.domain.model.User;
-import kr.hhplus.be.server.infrastructure.event.adapter.KafkaReservationConsumer;
+import kr.hhplus.be.server.reservation.infrastructure.event.adapter.KafkaReservationConsumer;
 import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.DisplayName;

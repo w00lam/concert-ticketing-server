@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.payment.application.service;
 
-import kr.hhplus.be.server.application.event.DomainEventPublisher;
+import kr.hhplus.be.server.common.application.event.DomainEventPublisher;
 import kr.hhplus.be.server.payment.application.port.in.MakePaymentCommand;
 import kr.hhplus.be.server.payment.application.port.in.MakePaymentResult;
 import kr.hhplus.be.server.payment.application.port.in.MakePaymentUseCase;

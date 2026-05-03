@@ -4,7 +4,7 @@ import kr.hhplus.be.server.reservation.application.port.in.MakeReservationComman
 import kr.hhplus.be.server.reservation.application.port.in.MakeReservationResult;
 import kr.hhplus.be.server.reservation.application.port.in.MakeReservationUseCase;
 import kr.hhplus.be.server.concert.domain.model.seat.SeatLockKey;
-import kr.hhplus.be.server.infrastructure.lock.DistributedLockManager;
+import kr.hhplus.be.server.common.application.lock.DistributedLockManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
