@@ -1,5 +1,7 @@
 # Concert Reservation Platform
 
+[![CI](https://github.com/w00lam/server-java/actions/workflows/ci.yml/badge.svg)](https://github.com/w00lam/server-java/actions/workflows/ci.yml)
+
 대용량 트래픽 환경을 가정한 콘서트 티켓팅 서버입니다. 좌석 선점, 예약, 결제, 포인트, 대기열, 이벤트 후처리 흐름을 중심으로 동시성 제어와 API 응답 표준화를 다룹니다.
 
 ## Why This Project
