@@ -1,5 +1,7 @@
 HELP.md
-.gradle
+
+### Gradle ###
+.gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -36,4 +38,35 @@ out/
 ### VS Code ###
 .vscode/
 
-data
+### Runtime and local data ###
+data/
+logs/
+*.log
+*.pid
+*.dump
+*.hprof
+
+### Local environment files ###
+.env
+.env.*
+!.env.example
+!.env.*.example
+application-*.local.yml
+application-*.local.yaml
+
+### Docker local overrides ###
+docker-compose.override.yml
+compose.override.yml
+
+### Database exports and local secrets ###
+*.sql
+*.sqlite
+*.db
+*.pem
+*.key
+*.p12
+*.jks
+
+### OS files ###
+.DS_Store
+Thumbs.db
