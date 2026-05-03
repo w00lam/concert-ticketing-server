@@ -6,12 +6,18 @@ import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TokenQueueIntegrationTest extends ReservationIntegrationTestBase {
+    private static final String QUEUE_KEY = "queue:token";
+
     @Autowired
     private TokenQueueUseCase tokenQueueUseCase;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     private User user1;
     private User user2;
@@ -19,8 +25,8 @@ public class TokenQueueIntegrationTest extends ReservationIntegrationTestBase {
 
     @BeforeEach
     void 준비_유저_생성() {
-        // Redis 초기화
-        tokenRepository.clearQueue();
+        // Reset the Redis queue directly in the test so production repository code stays focused on queue behavior.
+        redisTemplate.delete(QUEUE_KEY);
 
         // 테스트 유저 생성
         user1 = createUser();

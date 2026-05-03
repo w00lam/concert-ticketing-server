@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 /**
- * Implements the token queue repository output port with JPA.
+ * Implements the token queue repository output port with Redis Sorted Set operations.
  */
 
 @Repository
@@ -51,12 +51,5 @@ public class TokenQueueRepositoryImpl implements TokenQueueRepositoryPort {
         // ZPOPMIN performs read-and-remove in a single Redis command.
         ZSetOperations.TypedTuple<String> user = redisTemplate.opsForZSet().popMin(QUEUE_KEY);
         return user != null ? user.getValue() : null;
-    }
-
-    // =========================
-    // 테스트용 전체 초기화
-    // =========================
-    public void clearQueue() {
-        redisTemplate.delete(QUEUE_KEY);
     }
 }

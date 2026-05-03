@@ -21,7 +21,6 @@ import kr.hhplus.be.server.concert.infrastructure.persistence.ConcertRepositoryI
 import kr.hhplus.be.server.concert.infrastructure.persistence.SeatRepositoryImpl;
 import kr.hhplus.be.server.payment.infrastructure.persistence.PaymentRepositoryImpl;
 import kr.hhplus.be.server.point.infrastructure.persistence.PointRepositoryImpl;
-import kr.hhplus.be.server.tokenqueue.infrastructure.persistence.TokenQueueRepositoryImpl;
 import kr.hhplus.be.server.reservation.infrastructure.persistence.ReservationRepositoryImpl;
 import kr.hhplus.be.server.user.infrastructure.persistence.UserRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +54,6 @@ public abstract class ReservationIntegrationTestBase {
      */
     @Autowired
     protected UserRepositoryImpl userRepository;
-
-    @Autowired
-    protected TokenQueueRepositoryImpl tokenRepository;
 
     @Autowired
     protected ReservationRepositoryImpl reservationRepository;
