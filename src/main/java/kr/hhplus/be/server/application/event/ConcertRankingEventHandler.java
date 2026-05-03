@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+/**
+ * Handles events raised by the reservation event flow.
+ */
 
 @Component
 @RequiredArgsConstructor

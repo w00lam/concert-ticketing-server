@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
+/**
+ * Spring Data JPA repository for concert entities.
+ */
 
 @Repository
 public interface JpaConcertDateRepository extends JpaRepository<ConcertDate, UUID> {

@@ -2,6 +2,9 @@ package kr.hhplus.be.server.common.presentation;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
+/**
+ * Represents a successful API response with status, message, and data.
+ */
 
 @Schema(description = "공통 성공 응답")
 public record ApiResponse<T>(

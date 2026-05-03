@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+/**
+ * Implements the point use case and coordinates transactional work.
+ */
 
 @Service
 @RequiredArgsConstructor

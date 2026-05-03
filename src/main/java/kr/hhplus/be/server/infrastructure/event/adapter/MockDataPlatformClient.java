@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
+/**
+ * Adapts event infrastructure event flow to infrastructure components.
+ */
 
 @Slf4j
 @Component

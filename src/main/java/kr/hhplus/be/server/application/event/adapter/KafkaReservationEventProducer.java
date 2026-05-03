@@ -5,6 +5,9 @@ import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEve
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+/**
+ * Publishes reservation event messages through the configured messaging infrastructure.
+ */
 
 @Component
 @RequiredArgsConstructor

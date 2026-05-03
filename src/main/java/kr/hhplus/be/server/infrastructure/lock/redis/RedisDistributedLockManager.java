@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
+/**
+ * Uses Redis to acquire and safely release distributed locks.
+ */
 
 @Component
 @RequiredArgsConstructor

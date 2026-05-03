@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
+/**
+ * Provides application service behavior for the reservation feature.
+ */
 
 @Service
 @RequiredArgsConstructor

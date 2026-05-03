@@ -7,6 +7,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+/**
+ * Listens to reservation event events and triggers follow-up processing.
+ */
 
 @Component
 @RequiredArgsConstructor

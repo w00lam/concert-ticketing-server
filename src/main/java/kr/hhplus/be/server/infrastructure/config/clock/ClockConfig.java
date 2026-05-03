@@ -4,6 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Clock;
+/**
+ * Provides Spring beans and infrastructure settings for infrastructure concerns.
+ */
 
 @Configuration
 public class ClockConfig {

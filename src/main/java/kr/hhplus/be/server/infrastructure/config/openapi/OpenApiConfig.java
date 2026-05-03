@@ -5,6 +5,9 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+/**
+ * Provides Spring beans and infrastructure settings for infrastructure concerns.
+ */
 
 @Configuration
 public class OpenApiConfig {

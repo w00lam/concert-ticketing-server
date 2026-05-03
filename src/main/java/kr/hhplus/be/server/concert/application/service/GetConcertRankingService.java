@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+/**
+ * Provides application service behavior for the concert feature.
+ */
 
 
 @Service

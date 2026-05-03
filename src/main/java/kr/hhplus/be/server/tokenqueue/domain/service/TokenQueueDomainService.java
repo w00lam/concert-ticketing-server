@@ -1,6 +1,9 @@
 package kr.hhplus.be.server.tokenqueue.domain.service;
 
 import kr.hhplus.be.server.tokenqueue.domain.model.TokenQueue;
+/**
+ * Encapsulates domain rules for the token queue feature.
+ */
 
 public class TokenQueueDomainService {
     // FIFO 기반으로 순서 비교

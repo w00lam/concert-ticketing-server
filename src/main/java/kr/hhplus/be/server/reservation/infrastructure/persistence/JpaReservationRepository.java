@@ -10,6 +10,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+/**
+ * Spring Data JPA repository for reservation entities.
+ */
 
 
 public interface JpaReservationRepository extends JpaRepository<Reservation, UUID> {

@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
+/**
+ * Carries reservation API request values.
+ */
 
 @Schema(description = "좌석 예약 요청")
 public record MakeReservationRequest(

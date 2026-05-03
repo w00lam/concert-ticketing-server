@@ -21,6 +21,9 @@ import java.util.UUID;
                 @Index(name = "idx_reservation_id", columnList = "reservationId"),
                 @Index(name = "idx_status", columnList = "status")
         })
+/**
+ * Represents core state and rules in the payment domain.
+ */
 public class Payment {
     @Id
     @GeneratedValue

@@ -5,6 +5,9 @@ import kr.hhplus.be.server.concert.application.service.ConcertRankingItem;
 
 import java.util.List;
 import java.util.UUID;
+/**
+ * Carries concert API response values.
+ */
 
 @Schema(description = "콘서트 예약 랭킹 응답")
 public record ConcertRankingResponse(
@@ -18,6 +21,9 @@ public record ConcertRankingResponse(
                         .toList()
         );
     }
+    /**
+     * Carries concert presentation-layer values.
+     */
 
     @Schema(description = "콘서트 예약 랭킹 항목")
     public record Item(

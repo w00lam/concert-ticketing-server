@@ -5,6 +5,9 @@ import kr.hhplus.be.server.reservation.domain.model.Reservation;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
 
 import java.util.UUID;
+/**
+ * Defines the output port for reservation persistence.
+ */
 
 public interface ReservationRepositoryPort {
     Reservation findById(UUID reservationId);

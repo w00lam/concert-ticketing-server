@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
+/**
+ * Spring Data JPA repository for payment entities.
+ */
 
 @Repository
 public interface JpaPaymentRepository extends JpaRepository<Payment, UUID> {

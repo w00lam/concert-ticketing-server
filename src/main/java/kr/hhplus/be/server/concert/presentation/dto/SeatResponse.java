@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import kr.hhplus.be.server.concert.application.port.in.seat.GetSeatsResult;
 
 import java.util.UUID;
+/**
+ * Carries concert API response values.
+ */
 
 @Schema(description = "좌석 응답")
 public record SeatResponse(

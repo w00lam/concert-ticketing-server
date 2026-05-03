@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import kr.hhplus.be.server.point.application.port.in.GetPointResult;
 
 import java.util.UUID;
+/**
+ * Carries point API response values.
+ */
 
 @Schema(description = "포인트 잔액 조회 응답")
 public record GetPointResponse(
