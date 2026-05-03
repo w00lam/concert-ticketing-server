@@ -4,6 +4,16 @@
 
 대용량 트래픽 환경을 가정한 콘서트 티켓팅 서버입니다. 좌석 선점, 예약, 결제, 포인트, 대기열, 이벤트 후처리 흐름을 중심으로 동시성 제어와 API 응답 표준화를 다룹니다.
 
+## Project Snapshot
+
+| Area | Summary |
+| --- | --- |
+| Domain | 콘서트 좌석 조회, 임시 선점, 예약 확정, 결제, 포인트, 대기열 |
+| Traffic Focus | 좌석 중복 예약 방지, Redis 기반 락/대기열, 트랜잭션 이후 이벤트 처리 |
+| API Contract | 성공/에러 응답 공통 포맷, 세분화된 에러 코드, Bean Validation |
+| Operations | Docker Compose 로컬 인프라, 환경별 프로필, Actuator health check, GitHub Actions CI |
+| Tests | Docker 없는 기본 테스트와 Testcontainers 기반 통합 테스트 분리 |
+
 ## Why This Project
 
 티켓팅 서비스는 짧은 시간에 많은 사용자가 같은 좌석과 같은 결제 흐름에 접근합니다. 이 프로젝트는 다음 문제를 안정적으로 처리하는 것을 목표로 합니다.
@@ -26,6 +36,25 @@
 - Kafka
 - Gradle Kotlin DSL
 - JUnit 5, Mockito, Testcontainers
+
+## Architecture
+
+```mermaid
+flowchart LR
+    Client[Client] --> API[Spring Boot API]
+    API --> MySQL[(MySQL)]
+    API --> Redis[(Redis)]
+    API --> Kafka[(Kafka)]
+    Kafka --> Consumer[Reservation Event Consumer]
+    Consumer --> External[External Data Platform]
+
+    subgraph Application
+        API
+        Consumer
+    end
+```
+
+주요 요청은 컨트롤러에서 유스케이스로 전달되고, 도메인 모델과 정책이 예약/결제 상태를 검증합니다. MySQL은 예약과 결제의 영속 상태를 관리하고, Redis는 좌석 임시 선점과 대기열처럼 빠른 원자 연산이 필요한 흐름에 사용합니다. Kafka는 예약 확정 이후 외부 후처리를 비동기로 분리합니다.
 
 ## Core Features
 
@@ -152,6 +181,18 @@ Spring MVC 레벨 예외도 글로벌 핸들러에서 공통 에러 응답으로
 - 예약 확정 이벤트의 트랜잭션 이후 발행
 - 결제 흐름의 트랜잭션 경계 정리
 - 기본 단위 테스트와 Docker/Testcontainers 기반 통합 테스트 분리
+
+## Verification Checklist
+
+| Check | Command or URL |
+| --- | --- |
+| Unit tests | `./gradlew test` |
+| Infrastructure tests | `./gradlew integrationTest` |
+| Local infrastructure | `docker compose up -d` |
+| Compose validation | `docker compose config` |
+| Swagger UI | `http://localhost:8080/swagger-ui.html` |
+| Health check | `http://localhost:8080/actuator/health` |
+| Readiness check | `http://localhost:8080/actuator/health/readiness` |
 
 ## Running Tests
 
