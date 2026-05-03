@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.unit.application.reservation.service;
 
-import kr.hhplus.be.server.application.concert.port.out.ConcertRankingRepositoryPort;
-import kr.hhplus.be.server.application.concert.service.GetConcertRankingService;
+import kr.hhplus.be.server.concert.application.port.out.ConcertRankingRepositoryPort;
+import kr.hhplus.be.server.concert.application.service.GetConcertRankingService;
 import kr.hhplus.be.server.unit.BaseUnitTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

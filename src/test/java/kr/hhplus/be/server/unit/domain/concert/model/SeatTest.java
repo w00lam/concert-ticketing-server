@@ -1,9 +1,9 @@
 package kr.hhplus.be.server.unit.domain.concert.model;
 
 import kr.hhplus.be.server.unit.BaseUnitTest;
-import kr.hhplus.be.server.domain.concert.model.Concert;
-import kr.hhplus.be.server.domain.concert.model.ConcertDate;
-import kr.hhplus.be.server.domain.concert.model.seat.Seat;
+import kr.hhplus.be.server.concert.domain.model.Concert;
+import kr.hhplus.be.server.concert.domain.model.ConcertDate;
+import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

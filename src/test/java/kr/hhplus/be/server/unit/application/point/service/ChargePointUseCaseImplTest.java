@@ -1,13 +1,13 @@
 package kr.hhplus.be.server.unit.application.point.service;
 
-import kr.hhplus.be.server.application.point.port.in.ChargePointCommand;
-import kr.hhplus.be.server.application.point.port.in.ChargePointResult;
-import kr.hhplus.be.server.application.point.port.out.PointRepositoryPort;
-import kr.hhplus.be.server.application.point.service.ChargePointUseCaseImpl;
-import kr.hhplus.be.server.application.user.port.out.UserRepositoryPort;
-import kr.hhplus.be.server.domain.point.model.Point;
-import kr.hhplus.be.server.domain.point.service.PointDomainService;
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.point.application.port.in.ChargePointCommand;
+import kr.hhplus.be.server.point.application.port.in.ChargePointResult;
+import kr.hhplus.be.server.point.application.port.out.PointRepositoryPort;
+import kr.hhplus.be.server.point.application.service.ChargePointUseCaseImpl;
+import kr.hhplus.be.server.user.application.port.out.UserRepositoryPort;
+import kr.hhplus.be.server.point.domain.model.Point;
+import kr.hhplus.be.server.point.domain.service.PointDomainService;
+import kr.hhplus.be.server.user.domain.model.User;
 import kr.hhplus.be.server.unit.BaseUnitTest;
 import org.junit.jupiter.api.*;
 import org.mockito.*;

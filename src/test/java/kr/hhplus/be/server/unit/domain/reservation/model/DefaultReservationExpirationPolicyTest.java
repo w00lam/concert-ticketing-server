@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.unit.domain.reservation.model;
 
 import kr.hhplus.be.server.unit.BaseUnitTest;
-import kr.hhplus.be.server.domain.reservation.model.DefaultReservationExpirationPolicy;
-import kr.hhplus.be.server.domain.reservation.model.ReservationExpirationPolicy;
+import kr.hhplus.be.server.reservation.domain.model.DefaultReservationExpirationPolicy;
+import kr.hhplus.be.server.reservation.domain.model.ReservationExpirationPolicy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

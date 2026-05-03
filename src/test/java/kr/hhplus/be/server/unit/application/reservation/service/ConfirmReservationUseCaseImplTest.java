@@ -1,15 +1,15 @@
 package kr.hhplus.be.server.unit.application.reservation.service;
 
 import kr.hhplus.be.server.application.event.DomainEventPublisher;
-import kr.hhplus.be.server.application.reservation.event.ReservationConfirmedEvent;
-import kr.hhplus.be.server.application.reservation.port.in.ConfirmReservationCommand;
-import kr.hhplus.be.server.application.reservation.port.out.ReservationRepositoryPort;
-import kr.hhplus.be.server.application.reservation.service.ConfirmReservationUseCaseImpl;
-import kr.hhplus.be.server.domain.concert.model.Concert;
-import kr.hhplus.be.server.domain.concert.model.ConcertDate;
-import kr.hhplus.be.server.domain.concert.model.seat.Seat;
-import kr.hhplus.be.server.domain.reservation.model.Reservation;
-import kr.hhplus.be.server.domain.reservation.model.ReservationStatus;
+import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEvent;
+import kr.hhplus.be.server.reservation.application.port.in.ConfirmReservationCommand;
+import kr.hhplus.be.server.reservation.application.port.out.ReservationRepositoryPort;
+import kr.hhplus.be.server.reservation.application.service.ConfirmReservationUseCaseImpl;
+import kr.hhplus.be.server.concert.domain.model.Concert;
+import kr.hhplus.be.server.concert.domain.model.ConcertDate;
+import kr.hhplus.be.server.concert.domain.model.seat.Seat;
+import kr.hhplus.be.server.reservation.domain.model.Reservation;
+import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
 import kr.hhplus.be.server.unit.BaseUnitTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

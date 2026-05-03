@@ -1,9 +1,9 @@
 package kr.hhplus.be.server.unit.domain.point.service;
 
-import kr.hhplus.be.server.domain.point.model.Point;
-import kr.hhplus.be.server.domain.point.model.PointType;
-import kr.hhplus.be.server.domain.point.service.PointDomainService;
-import kr.hhplus.be.server.domain.user.model.User;
+import kr.hhplus.be.server.point.domain.model.Point;
+import kr.hhplus.be.server.point.domain.model.PointType;
+import kr.hhplus.be.server.point.domain.service.PointDomainService;
+import kr.hhplus.be.server.user.domain.model.User;
 import kr.hhplus.be.server.unit.BaseUnitTest;
 import org.junit.jupiter.api.*;
 

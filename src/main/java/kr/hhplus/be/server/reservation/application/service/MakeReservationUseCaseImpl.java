@@ -1,0 +1,39 @@
+package kr.hhplus.be.server.reservation.application.service;
+
+import kr.hhplus.be.server.reservation.application.port.in.MakeReservationCommand;
+import kr.hhplus.be.server.reservation.application.port.in.MakeReservationResult;
+import kr.hhplus.be.server.reservation.application.port.in.MakeReservationUseCase;
+import kr.hhplus.be.server.concert.domain.model.seat.SeatLockKey;
+import kr.hhplus.be.server.infrastructure.lock.DistributedLockManager;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+
+@Service
+@RequiredArgsConstructor
+public class MakeReservationUseCaseImpl implements MakeReservationUseCase {
+    private final ReservationTxService reservationTxService;
+    private final DistributedLockManager lockManager;
+
+
+    @Override
+    public MakeReservationResult execute(MakeReservationCommand command) {
+        // Serialize attempts for the same concert seat before entering the DB transaction.
+        String lockKey = SeatLockKey.of(command.concertId(), command.seatId());
+        String lockValue = lockManager.lock(lockKey, Duration.ofSeconds(5));
+
+
+        if (lockValue == null) {
+            throw new RuntimeException("Seat is already being reserved");
+        }
+
+
+        try {
+            return reservationTxService.reserve(command);
+        } finally {
+            // Unlock with the owner token so another request's lock is not released accidentally.
+            lockManager.unlock(lockKey, lockValue);
+        }
+    }
+}

@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.infrastructure.event.adapter;
 
 import kr.hhplus.be.server.application.event.port.out.DataPlatformClientPort;
-import kr.hhplus.be.server.application.reservation.event.ReservationConfirmedEvent;
+import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -15,9 +15,9 @@ public class KafkaReservationConsumer {
 
     @KafkaListener(topics = "reservation-confirmed", groupId = "data-platform-group")
     public void consumeReservation(ReservationConfirmedEvent event) {
-        log.info("카프카로부터 예약 확정 이벤트 수신: {}", event.reservationId());
+        log.info("Received reservation confirmed event: {}", event.reservationId());
 
-        // 기존에 외부 API를 호출하던 로직을 여기서 실행
-        dataPlatformClientPort.sendReservationConfirmed(event.reservationId(), event.reservationId());
+        // Preserve the concert id from Kafka so external aggregation uses the same key as ranking.
+        dataPlatformClientPort.sendReservationConfirmed(event.reservationId(), event.concertId());
     }
 }

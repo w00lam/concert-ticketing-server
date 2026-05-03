@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.application.event;
 
-import kr.hhplus.be.server.application.concert.service.GetConcertRankingService;
-import kr.hhplus.be.server.application.reservation.event.ReservationCanceledEvent;
-import kr.hhplus.be.server.application.reservation.event.ReservationConfirmedEvent;
+import kr.hhplus.be.server.concert.application.service.GetConcertRankingService;
+import kr.hhplus.be.server.reservation.application.event.ReservationCanceledEvent;
+import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;

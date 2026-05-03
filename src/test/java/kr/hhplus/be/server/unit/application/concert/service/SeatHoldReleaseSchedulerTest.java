@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.unit.application.concert.service;
 
-import kr.hhplus.be.server.application.concert.port.out.SeatRepositoryPort;
-import kr.hhplus.be.server.application.concert.service.SeatHoldReleaseScheduler;
-import kr.hhplus.be.server.domain.concert.model.seat.Seat;
+import kr.hhplus.be.server.concert.application.port.out.SeatRepositoryPort;
+import kr.hhplus.be.server.concert.application.service.SeatHoldReleaseScheduler;
+import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,8 +12,12 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class SeatHoldReleaseSchedulerTest {
     @Mock
@@ -28,24 +32,24 @@ public class SeatHoldReleaseSchedulerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        seat1 = Seat.builder().deleted(true).build();
-        seat2 = Seat.builder().deleted(true).build();
+        seat1 = Seat.builder().held(true).holdUntil(LocalDateTime.now().minusMinutes(1)).deleted(false).build();
+        seat2 = Seat.builder().held(true).holdUntil(LocalDateTime.now().minusMinutes(1)).deleted(false).build();
     }
 
     @Test
-    void testReleaseExpiredHolds() {
+    void releaseExpiredHolds_clearsHoldState() {
         List<Seat> expiredSeats = List.of(seat1, seat2);
         when(seatRepository.findSeatsByConcertDateIdForHoldRelease(any(LocalDateTime.class)))
                 .thenReturn(expiredSeats);
 
         scheduler.releaseExpiredHolds();
 
-        // Repository save 호출 확인
+        // The scheduler persists each released seat after clearing its temporary hold state.
         verify(seatRepository, times(1)).save(seat1);
         verify(seatRepository, times(1)).save(seat2);
-
-        // deleted=false로 변경 확인
-        assertFalse(seat1.isDeleted());
-        assertFalse(seat2.isDeleted());
+        assertFalse(seat1.isHeld());
+        assertFalse(seat2.isHeld());
+        assertNull(seat1.getHoldUntil());
+        assertNull(seat2.getHoldUntil());
     }
 }

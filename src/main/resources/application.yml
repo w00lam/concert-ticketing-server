@@ -2,7 +2,7 @@ spring:
   application:
     name: hhplus
   profiles:
-    active: local
+    default: local
   datasource:
     name: HangHaePlusDataSource
     type: com.zaxxer.hikari.HikariDataSource
@@ -22,11 +22,26 @@ spring:
       hibernate.timezone.default_storage: NORMALIZE_UTC
       hibernate.jdbc.time_zone: UTC
 
----
-spring.config.activate.on-profile: local, test
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+      group:
+        liveness:
+          include: livenessState
+        readiness:
+          include: readinessState,db,redis
+  info:
+    env:
+      enabled: true
 
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/hhplus?characterEncoding=UTF-8&serverTimezone=UTC
-    username: application
-    password: application
+info:
+  app:
+    name: ${spring.application.name}
+    description: Concert reservation platform
