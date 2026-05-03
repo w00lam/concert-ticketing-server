@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Positive;
 import kr.hhplus.be.server.payment.domain.model.PaymentMethod;
 
 import java.util.UUID;
+/**
+ * Carries payment API request values.
+ */
 
 @Schema(description = "결제 생성 요청")
 public record PaymentRequest(

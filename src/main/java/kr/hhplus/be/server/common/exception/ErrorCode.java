@@ -1,4 +1,7 @@
 package kr.hhplus.be.server.common.exception;
+/**
+ * Defines detailed error codes used in API error responses.
+ */
 
 public enum ErrorCode {
     // Request payload or command value is invalid.

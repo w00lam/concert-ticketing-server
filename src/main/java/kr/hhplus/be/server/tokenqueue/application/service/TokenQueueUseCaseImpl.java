@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+/**
+ * Implements the token queue use case and coordinates transactional work.
+ */
 
 @Service
 @RequiredArgsConstructor

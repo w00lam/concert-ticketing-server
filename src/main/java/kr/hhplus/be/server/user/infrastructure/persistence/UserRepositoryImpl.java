@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
+/**
+ * Implements the user repository output port with JPA.
+ */
 
 @Repository
 @RequiredArgsConstructor

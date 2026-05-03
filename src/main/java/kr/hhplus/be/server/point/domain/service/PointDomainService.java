@@ -7,6 +7,9 @@ import kr.hhplus.be.server.user.domain.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+/**
+ * Encapsulates domain rules for the point feature.
+ */
 
 @Component
 public class PointDomainService {

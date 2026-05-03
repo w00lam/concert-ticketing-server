@@ -11,6 +11,9 @@ import kr.hhplus.be.server.reservation.application.port.out.ReservationRepositor
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+/**
+ * Implements the reservation use case and coordinates transactional work.
+ */
 
 @Service
 @RequiredArgsConstructor

@@ -8,6 +8,9 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;
+/**
+ * Implements the token queue repository output port with JPA.
+ */
 
 @Repository
 @RequiredArgsConstructor

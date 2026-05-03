@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
+/**
+ * Implements the point repository output port with JPA.
+ */
 
 @Repository
 @RequiredArgsConstructor

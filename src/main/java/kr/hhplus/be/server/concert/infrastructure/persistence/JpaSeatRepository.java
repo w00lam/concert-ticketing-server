@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+/**
+ * Spring Data JPA repository for concert entities.
+ */
 
 @Repository
 public interface JpaSeatRepository extends JpaRepository<Seat, UUID> {

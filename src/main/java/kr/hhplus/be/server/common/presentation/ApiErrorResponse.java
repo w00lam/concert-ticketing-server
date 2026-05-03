@@ -3,6 +3,9 @@ package kr.hhplus.be.server.common.presentation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
+/**
+ * Represents a failed API response with status, message, code, and data.
+ */
 
 @Schema(description = "공통 에러 응답")
 public record ApiErrorResponse(

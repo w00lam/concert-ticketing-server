@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+/**
+ * Implements the concert repository output port with JPA.
+ */
 
 @Repository
 @RequiredArgsConstructor

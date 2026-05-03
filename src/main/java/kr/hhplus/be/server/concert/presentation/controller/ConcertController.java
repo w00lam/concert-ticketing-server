@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+/**
+ * Handles HTTP requests for the concert feature.
+ */
 
 @RestController
 @RequestMapping("/concerts")

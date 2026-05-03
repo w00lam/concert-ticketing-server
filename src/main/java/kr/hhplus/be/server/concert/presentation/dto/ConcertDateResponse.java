@@ -5,6 +5,9 @@ import kr.hhplus.be.server.concert.application.port.in.concertdate.GetConcertDat
 
 import java.time.LocalDate;
 import java.util.UUID;
+/**
+ * Carries concert API response values.
+ */
 
 @Schema(description = "콘서트 날짜 응답")
 public record ConcertDateResponse(

@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+/**
+ * Implements the reservation use case and coordinates transactional work.
+ */
 
 @Service
 @RequiredArgsConstructor

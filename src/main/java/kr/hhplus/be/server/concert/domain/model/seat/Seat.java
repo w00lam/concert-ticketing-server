@@ -26,6 +26,9 @@ import java.util.UUID;
         indexes = {@Index(name = "idx_concert_date_section_seat_row",
                 columnList = "concert_date_id, section, seat_row")}
 )
+/**
+ * Represents core state and rules in the concert domain.
+ */
 public class Seat {
     @Id
     @GeneratedValue

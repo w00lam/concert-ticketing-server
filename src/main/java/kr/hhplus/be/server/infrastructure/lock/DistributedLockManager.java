@@ -1,6 +1,9 @@
 package kr.hhplus.be.server.infrastructure.lock;
 
 import java.time.Duration;
+/**
+ * Coordinates exclusive access to shared resources in a distributed environment.
+ */
 
 public interface DistributedLockManager {
     /**

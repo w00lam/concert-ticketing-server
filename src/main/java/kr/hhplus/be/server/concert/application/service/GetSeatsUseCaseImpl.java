@@ -10,6 +10,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+/**
+ * Implements the concert use case and coordinates transactional work.
+ */
 
 @Service
 @RequiredArgsConstructor

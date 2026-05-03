@@ -4,6 +4,9 @@ import kr.hhplus.be.server.concert.application.port.out.ConcertRepositoryPort;
 import kr.hhplus.be.server.concert.domain.model.Concert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+/**
+ * Implements the concert repository output port with JPA.
+ */
 
 @Repository
 @RequiredArgsConstructor

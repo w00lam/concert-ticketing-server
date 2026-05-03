@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.util.UUID;
+/**
+ * Carries point API request values.
+ */
 
 @Schema(description = "포인트 충전 요청")
 public record ChargePointRequest(

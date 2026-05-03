@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+/**
+ * Adapts event infrastructure event flow to infrastructure components.
+ */
 
 @Component
 @Slf4j

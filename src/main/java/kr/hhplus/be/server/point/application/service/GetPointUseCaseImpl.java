@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+/**
+ * Implements the point use case and coordinates transactional work.
+ */
 
 @Service
 @RequiredArgsConstructor

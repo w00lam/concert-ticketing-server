@@ -10,6 +10,9 @@ import kr.hhplus.be.server.point.domain.service.PointDomainService;
 import kr.hhplus.be.server.user.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+/**
+ * Implements the point use case and coordinates transactional work.
+ */
 
 @Service
 @RequiredArgsConstructor

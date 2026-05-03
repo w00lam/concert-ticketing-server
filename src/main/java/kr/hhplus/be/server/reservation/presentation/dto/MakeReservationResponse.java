@@ -5,6 +5,9 @@ import kr.hhplus.be.server.reservation.application.port.in.MakeReservationResult
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+/**
+ * Carries reservation API response values.
+ */
 
 @Schema(description = "좌석 예약 응답")
 public record MakeReservationResponse(
