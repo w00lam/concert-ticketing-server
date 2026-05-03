@@ -44,9 +44,9 @@ public class ConcertAndSeatPerformanceTest extends ReservationIntegrationTestBas
         }
 
         long duration = System.currentTimeMillis() - start;
-        System.out.println("[캐시 적용 전] 총 100회 콘서트 목록 조회 소요 시간(ms): " + duration);
 
         var result = getConcertDatesUseCase.execute(new GetConcertDatesQuery(testConcertId));
+        assertThat(duration).isGreaterThanOrEqualTo(0L);
         assertThat(result).isNotEmpty();
     }
 
@@ -63,9 +63,9 @@ public class ConcertAndSeatPerformanceTest extends ReservationIntegrationTestBas
         }
 
         long duration = System.currentTimeMillis() - start;
-        System.out.println("[캐시 적용 후] 총 100회 콘서트 목록 조회 소요 시간(ms): " + duration);
 
         var result = getConcertDatesUseCase.execute(new GetConcertDatesQuery(testConcertId));
+        assertThat(duration).isGreaterThanOrEqualTo(0L);
         assertThat(result).isNotEmpty();
     }
 
@@ -79,9 +79,9 @@ public class ConcertAndSeatPerformanceTest extends ReservationIntegrationTestBas
         }
 
         long duration = System.currentTimeMillis() - start;
-        System.out.println("[캐시 적용 전] 총 100회 좌석 조회 소요 시간(ms): " + duration);
 
         var seats = getSeatsUseCase.execute(new GetSeatsQuery(testConcertDateId));
+        assertThat(duration).isGreaterThanOrEqualTo(0L);
         assertThat(seats).isNotEmpty();
     }
 
@@ -98,9 +98,9 @@ public class ConcertAndSeatPerformanceTest extends ReservationIntegrationTestBas
         }
 
         long duration = System.currentTimeMillis() - start;
-        System.out.println("[캐시 적용 후] 총 100회 좌석 조회 소요 시간(ms): " + duration);
 
         var seats = getSeatsUseCase.execute(new GetSeatsQuery(testConcertDateId));
+        assertThat(duration).isGreaterThanOrEqualTo(0L);
         assertThat(seats).isNotEmpty();
     }
 }

@@ -20,6 +20,7 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,8 +32,6 @@ public class SeatTempHoldConcurrencyTest extends ReservationIntegrationTestBase 
     @Test
     @DisplayName("동일 좌석에 대해 동시에 예약 요청 시 임시 배정은 1건만 성공한다")
     void reserve_seat_concurrently() throws Exception {
-        System.out.println("DOCKER_HOST=" + System.getenv("DOCKER_HOST"));
-
         // given
         User user1 = createUser();
         User user2 = createUser();
@@ -54,12 +53,16 @@ public class SeatTempHoldConcurrencyTest extends ReservationIntegrationTestBase 
         int threadCount = 3;
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
         CountDownLatch latch = new CountDownLatch(threadCount);
+        AtomicInteger successCount = new AtomicInteger();
+        AtomicInteger failCount = new AtomicInteger();
 
         // when
         executor.submit(() -> {
             try {
                 reserveSeat(user1.getId(), concert.getId(), seatId);
-            } catch (Exception ignored) {
+                successCount.incrementAndGet();
+            } catch (Exception exception) {
+                failCount.incrementAndGet();
             } finally {
                 latch.countDown();
             }
@@ -68,7 +71,9 @@ public class SeatTempHoldConcurrencyTest extends ReservationIntegrationTestBase 
         executor.submit(() -> {
             try {
                 reserveSeat(user2.getId(), concert.getId(), seatId);
-            } catch (Exception ignored) {
+                successCount.incrementAndGet();
+            } catch (Exception exception) {
+                failCount.incrementAndGet();
             } finally {
                 latch.countDown();
             }
@@ -77,7 +82,9 @@ public class SeatTempHoldConcurrencyTest extends ReservationIntegrationTestBase 
         executor.submit(() -> {
             try {
                 reserveSeat(user3.getId(), concert.getId(), seatId);
-            } catch (Exception ignored) {
+                successCount.incrementAndGet();
+            } catch (Exception exception) {
+                failCount.incrementAndGet();
             } finally {
                 latch.countDown();
             }
@@ -94,6 +101,8 @@ public class SeatTempHoldConcurrencyTest extends ReservationIntegrationTestBase 
                 .filter(r -> r.getStatus() == ReservationStatus.TEMP_HOLD)
                 .count();
 
+        assertThat(successCount.get()).isEqualTo(1);
+        assertThat(failCount.get()).isEqualTo(threadCount - 1);
         assertThat(tempHoldCount).isEqualTo(1);
     }
 }

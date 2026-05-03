@@ -42,7 +42,7 @@ public class SeatReservationDistributedLockTest extends ReservationIntegrationTe
                         try {
                             reserveSeat(userId, concert.getId(), seat.getId());
                             return true;
-                        } catch (Exception e) {
+                        } catch (Exception exception) {
                             return false;
                         } finally {
                             latch.countDown();
@@ -55,15 +55,12 @@ public class SeatReservationDistributedLockTest extends ReservationIntegrationTe
         executor.shutdown();
 
         // then
-        long successCount = results.stream()
-                .filter(future -> {
-                    try {
-                        return future.get();
-                    } catch (Exception e) {
-                        return false;
-                    }
-                })
-                .count();
+        long successCount = 0;
+        for (Future<Boolean> result : results) {
+            if (result.get()) {
+                successCount++;
+            }
+        }
 
         assertThat(successCount).isEqualTo(1);
 

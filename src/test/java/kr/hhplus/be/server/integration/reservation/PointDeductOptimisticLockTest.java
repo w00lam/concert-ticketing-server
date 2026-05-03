@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,6 +49,7 @@ public class PointDeductOptimisticLockTest extends ReservationIntegrationTestBas
 
         AtomicInteger success = new AtomicInteger();
         AtomicInteger fail = new AtomicInteger();
+        ConcurrentLinkedQueue<Throwable> unexpectedFailures = new ConcurrentLinkedQueue<>();
 
         DeductPointCommand command =
                 new DeductPointCommand(user.getId(), 100);
@@ -64,8 +66,8 @@ public class PointDeductOptimisticLockTest extends ReservationIntegrationTestBas
 
                 } catch (ObjectOptimisticLockingFailureException e) {
                     fail.incrementAndGet();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception exception) {
+                    unexpectedFailures.add(exception);
                 } finally {
                     doneLatch.countDown();
                 }
@@ -81,9 +83,7 @@ public class PointDeductOptimisticLockTest extends ReservationIntegrationTestBas
         // then
         User result = userRepository.findById(user.getId());
 
-        System.out.println("success = " + success.get());
-        System.out.println("fail = " + fail.get());
-
+        assertThat(unexpectedFailures).isEmpty();
         assertThat(success.get()).isEqualTo(1);
         assertThat(fail.get()).isEqualTo(threadCount - 1);
         assertThat(result.getPoints()).isEqualTo(1000000 - 100);

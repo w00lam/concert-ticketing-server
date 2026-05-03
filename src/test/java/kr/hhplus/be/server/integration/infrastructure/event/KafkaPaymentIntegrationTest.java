@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 
 @EmbeddedKafka(
         partitions = 1,
-        brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" },
+        bootstrapServersProperty = "spring.kafka.bootstrap-servers",
         topics = { "reservation-confirmed" }
 )
 @TestPropertySource(properties = "spring.kafka.listener.auto-startup=true")

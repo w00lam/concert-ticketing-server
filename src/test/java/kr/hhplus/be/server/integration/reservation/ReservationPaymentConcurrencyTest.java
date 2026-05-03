@@ -91,7 +91,7 @@ public class ReservationPaymentConcurrencyTest extends ReservationIntegrationTes
                     );
 
                     successCount.incrementAndGet();
-                } catch (Exception e) {
+                } catch (Exception exception) {
                     failCount.incrementAndGet();
                 } finally {
                     doneLatch.countDown();
