@@ -2,8 +2,6 @@ package kr.hhplus.be.server.integration.reservation;
 
 import kr.hhplus.be.server.concert.application.port.out.ConcertRankingRepositoryPort;
 import kr.hhplus.be.server.concert.application.service.ConcertRankingItem;
-import kr.hhplus.be.server.reservation.application.port.in.ConfirmReservationCommand;
-import kr.hhplus.be.server.reservation.application.port.in.ConfirmReservationUseCase;
 import kr.hhplus.be.server.concert.domain.model.Concert;
 import kr.hhplus.be.server.concert.domain.model.ConcertDate;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
@@ -22,8 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ConcertRankingRedisIntegrationTest extends ReservationIntegrationTestBase {
     @Autowired
     private ConcertRankingRepositoryPort concertRankingRepository;
-    @Autowired
-    private ConfirmReservationUseCase confirmReservationUseCase;
 
     @Test
     void 예약이_결제로_확정되면_콘서트_랭킹이_Redis에_반영된다() {
@@ -54,7 +50,6 @@ public class ConcertRankingRedisIntegrationTest extends ReservationIntegrationTe
 
         // when: 결제 → 예약 확정
         payReservation(reservationId, 5_000, PaymentMethod.CARD);
-        confirmReservationUseCase.execute(new ConfirmReservationCommand(reservationId));
 
         // then: 콘서트 랭킹에 반영됨
         List<ConcertRankingItem> rankings = concertRankingRepository.findTopRanked(10);
