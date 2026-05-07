@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.payment.application.service;
 
+import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.payment.application.port.in.MakePaymentCommand;
 import kr.hhplus.be.server.payment.application.port.in.MakePaymentResult;
 import kr.hhplus.be.server.payment.application.port.in.MakePaymentUseCase;
@@ -30,6 +32,11 @@ public class MakePaymentUseCaseImpl implements MakePaymentUseCase {
     public MakePaymentResult execute(MakePaymentCommand command) {
         paymentDomainService.validateAmount(command.amount());
 
+        var existingPayment = paymentRepositoryPort.findByReservationId(command.reservationId());
+        if (existingPayment.isPresent()) {
+            return resultFromExisting(command, existingPayment.get());
+        }
+
         Reservation reservation = reservationConfirmationService.confirm(command.reservationId());
 
         Payment payment = paymentDomainService.createPaid(reservation, command.amount(), command.method(), clock);
@@ -37,5 +44,16 @@ public class MakePaymentUseCaseImpl implements MakePaymentUseCase {
         Payment saved = paymentRepositoryPort.save(payment);
 
         return new MakePaymentResult(saved.getId(), saved.getStatus().name());
+    }
+
+    private MakePaymentResult resultFromExisting(MakePaymentCommand command, Payment payment) {
+        if (!payment.hasSameRequest(command.amount(), command.method())) {
+            throw new BusinessRuleViolationException(
+                    ErrorCode.PAYMENT_ALREADY_PROCESSED,
+                    "\uC774\uBBF8 \uACB0\uC81C\uB41C \uC608\uC57D\uC785\uB2C8\uB2E4."
+            );
+        }
+
+        return new MakePaymentResult(payment.getId(), payment.getStatus().name());
     }
 }

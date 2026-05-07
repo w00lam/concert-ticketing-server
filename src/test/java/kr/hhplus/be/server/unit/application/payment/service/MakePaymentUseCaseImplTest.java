@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.time.Clock;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -68,6 +69,7 @@ public class MakePaymentUseCaseImplTest extends BaseUnitTest {
         MakePaymentCommand command = new MakePaymentCommand(reservationId, amount, PaymentMethod.CARD);
 
         doNothing().when(paymentDomainService).validateAmount(amount);
+        when(paymentRepositoryPort.findByReservationId(reservationId)).thenReturn(Optional.empty());
         when(reservationConfirmationService.confirm(reservationId)).thenReturn(reservation);
         when(paymentDomainService.createPaid(reservation, amount, PaymentMethod.CARD, clock)).thenReturn(paidPayment);
         when(paymentRepositoryPort.save(paidPayment)).thenReturn(savedPayment);
@@ -88,12 +90,60 @@ public class MakePaymentUseCaseImplTest extends BaseUnitTest {
         MakePaymentCommand command = new MakePaymentCommand(reservationId, amount, PaymentMethod.CARD);
 
         doNothing().when(paymentDomainService).validateAmount(amount);
+        when(paymentRepositoryPort.findByReservationId(reservationId)).thenReturn(Optional.empty());
         when(reservationConfirmationService.confirm(reservationId))
                 .thenThrow(BusinessRuleViolationException.class);
 
         assertThrows(BusinessRuleViolationException.class, () -> useCase.execute(command));
 
         verify(reservationConfirmationService).confirm(reservationId);
+        verify(paymentRepositoryPort, never()).save(any(Payment.class));
+    }
+
+    @Test
+    @DisplayName("Payment returns existing payment for duplicate same request")
+    void execute_duplicateSameRequest() {
+        UUID reservationId = fixedUUID();
+        int amount = 10000;
+        Payment existingPayment = Payment.builder()
+                .id(UUID.randomUUID())
+                .amount(amount)
+                .method(PaymentMethod.CARD)
+                .status(PaymentStatus.PAID)
+                .build();
+        MakePaymentCommand command = new MakePaymentCommand(reservationId, amount, PaymentMethod.CARD);
+
+        doNothing().when(paymentDomainService).validateAmount(amount);
+        when(paymentRepositoryPort.findByReservationId(reservationId)).thenReturn(Optional.of(existingPayment));
+
+        MakePaymentResult result = useCase.execute(command);
+
+        assertEquals(existingPayment.getId(), result.paymentId());
+        assertEquals(PaymentStatus.PAID.name(), result.status());
+
+        verify(reservationConfirmationService, never()).confirm(any());
+        verify(paymentRepositoryPort, never()).save(any(Payment.class));
+    }
+
+    @Test
+    @DisplayName("Payment rejects duplicate request with different amount")
+    void execute_duplicateDifferentRequest() {
+        UUID reservationId = fixedUUID();
+        int amount = 10000;
+        Payment existingPayment = Payment.builder()
+                .id(UUID.randomUUID())
+                .amount(amount)
+                .method(PaymentMethod.CARD)
+                .status(PaymentStatus.PAID)
+                .build();
+        MakePaymentCommand command = new MakePaymentCommand(reservationId, amount + 1, PaymentMethod.CARD);
+
+        doNothing().when(paymentDomainService).validateAmount(amount + 1);
+        when(paymentRepositoryPort.findByReservationId(reservationId)).thenReturn(Optional.of(existingPayment));
+
+        assertThrows(BusinessRuleViolationException.class, () -> useCase.execute(command));
+
+        verify(reservationConfirmationService, never()).confirm(any());
         verify(paymentRepositoryPort, never()).save(any(Payment.class));
     }
 }

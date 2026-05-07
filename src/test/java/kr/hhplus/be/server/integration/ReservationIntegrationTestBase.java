@@ -185,4 +185,14 @@ public abstract class ReservationIntegrationTestBase {
                 .setParameter("status", status)
                 .getSingleResult();
     }
+
+    protected long countPaymentsByReservationId(UUID reservationId) {
+        return em.createQuery("""
+                        SELECT COUNT(p)
+                        FROM Payment p
+                        WHERE p.reservation.id = :reservationId
+                        """, Long.class)
+                .setParameter("reservationId", reservationId)
+                .getSingleResult();
+    }
 }

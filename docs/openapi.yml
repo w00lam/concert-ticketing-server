@@ -101,7 +101,7 @@ components:
           type: integer
         method:
           type: string
-          enum: [CARD, CASH]
+          enum: [CARD, CASH, TRANSFER]
       required:
         - reservationId
         - amount

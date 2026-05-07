@@ -90,4 +90,17 @@ public class PaymentTest extends BaseUnitTest {
         assertNull(payment.getCreatedAt());
         assertNull(payment.getUpdatedAt());
     }
+
+    @Test
+    @DisplayName("hasSameRequest compares amount and method")
+    void hasSameRequest_shouldCompareAmountAndMethod() {
+        Payment payment = Payment.builder()
+                .amount(55000)
+                .method(PaymentMethod.CARD)
+                .build();
+
+        assertEquals(true, payment.hasSameRequest(55000, PaymentMethod.CARD));
+        assertEquals(false, payment.hasSameRequest(55001, PaymentMethod.CARD));
+        assertEquals(false, payment.hasSameRequest(55000, PaymentMethod.CASH));
+    }
 }

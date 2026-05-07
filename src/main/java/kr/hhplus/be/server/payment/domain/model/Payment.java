@@ -18,8 +18,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "PAYMENTS",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_payment_reservation",
+                columnNames = "reservation_id"
+        ),
         indexes = {
-                @Index(name = "idx_reservation_id", columnList = "reservationId"),
                 @Index(name = "idx_status", columnList = "status")
         })
 /**
@@ -79,5 +82,9 @@ public class Payment {
                 .paidAt(LocalDateTime.now(clock))
                 .deleted(false)
                 .build();
+    }
+
+    public boolean hasSameRequest(int amount, PaymentMethod method) {
+        return this.amount == amount && this.method == method;
     }
 }

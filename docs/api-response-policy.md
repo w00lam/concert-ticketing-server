@@ -102,6 +102,8 @@
 | `RESERVATION_ALREADY_CANCELLED` | 이미 취소된 예약입니다. | 이미 취소된 예약을 다시 취소하려는 경우 |
 | `RESERVATION_EXPIRED_OR_PROCESSED` | 예약이 만료되었거나 이미 처리되었습니다. | 예약 확정 조건을 만족하지 못한 경우 |
 
+| `PAYMENT_ALREADY_PROCESSED` | 이미 결제된 예약입니다. | 결제된 예약에 다른 결제 조건으로 재요청한 경우 |
+
 ### Server Error
 
 | Code | Message Example | Description |
