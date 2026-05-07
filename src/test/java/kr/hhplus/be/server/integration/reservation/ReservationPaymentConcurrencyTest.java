@@ -1,114 +1,89 @@
 package kr.hhplus.be.server.integration.reservation;
 
-import kr.hhplus.be.server.point.application.port.in.DeductPointCommand;
-import kr.hhplus.be.server.point.application.port.in.DeductPointUseCase;
-import kr.hhplus.be.server.reservation.application.port.in.ConfirmReservationCommand;
-import kr.hhplus.be.server.reservation.application.port.in.ConfirmReservationUseCase;
-import kr.hhplus.be.server.reservation.application.port.in.MakeReservationCommand;
-import kr.hhplus.be.server.reservation.application.port.in.MakeReservationUseCase;
-import kr.hhplus.be.server.reservation.application.port.out.ReservationRepositoryPort;
-import kr.hhplus.be.server.user.application.port.out.UserRepositoryPort;
-import kr.hhplus.be.server.concert.domain.model.Concert;
+import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
+import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
+import kr.hhplus.be.server.payment.application.port.in.MakePaymentCommand;
+import kr.hhplus.be.server.payment.domain.model.PaymentMethod;
+import kr.hhplus.be.server.reservation.application.port.in.MakeReservationCommand;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
 import kr.hhplus.be.server.user.domain.model.User;
-import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class ReservationPaymentConcurrencyTest extends ReservationIntegrationTestBase {
-    @Autowired
-    MakeReservationUseCase makeReservationUseCase;
-    @Autowired
-    ConfirmReservationUseCase confirmReservationUseCase;
-    @Autowired
-    DeductPointUseCase deductPointUseCase;
-    @Autowired
-    ReservationRepositoryPort reservationRepository;
-    @Autowired
-    UserRepositoryPort userRepository;
-
     @Test
-    @DisplayName("동일 좌석 예약 + 결제 동시 요청 시 단 1건만 성공한다")
-    void reserve_and_pay_concurrently() throws Exception {
-        // given
-        User user1 = createUserWithPoints(1000);
-        User user2 = createUserWithPoints(1000);
-        User user3 = createUserWithPoints(1000);
-
-        Concert concert = Concert.builder()
-                .title("concert")
-                .build();
-
-        Seat seat = createSeat();
-        UUID seatId = seat.getId();
-
-        int threadCount = 3;
-        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
-
-        CountDownLatch startLatch = new CountDownLatch(1);
-        CountDownLatch doneLatch = new CountDownLatch(threadCount);
-
-        AtomicInteger successCount = new AtomicInteger();
-        AtomicInteger failCount = new AtomicInteger();
-
+    void concurrentReserveAndPayForSameSeat_allowsOnlyOnePaidReservation() throws Exception {
+        User user1 = createUserWithPoints(1_000);
+        User user2 = createUserWithPoints(1_000);
+        User user3 = createUserWithPoints(1_000);
         List<User> users = List.of(user1, user2, user3);
 
-        // when
+        Seat seat = createSeat();
+        UUID concertId = seat.getConcertDate().getConcert().getId();
+        UUID seatId = seat.getId();
+
+        int threadCount = users.size();
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        CountDownLatch readyLatch = new CountDownLatch(threadCount);
+        CountDownLatch startLatch = new CountDownLatch(1);
+        CountDownLatch doneLatch = new CountDownLatch(threadCount);
+        ConcurrentLinkedQueue<UUID> paidReservationIds = new ConcurrentLinkedQueue<>();
+        ConcurrentLinkedQueue<Throwable> unexpectedFailures = new ConcurrentLinkedQueue<>();
+
         for (User user : users) {
             executor.submit(() -> {
                 try {
-                    startLatch.await(); // 🔥 동시 시작 보장
+                    readyLatch.countDown();
+                    startLatch.await();
 
-                    // 1. 임시 예약
-                    var reserveResult = makeReservationUseCase.execute(
-                            new MakeReservationCommand(user.getId(), concert.getId(), seatId)
+                    var reservation = makeReservationUseCase.execute(
+                            new MakeReservationCommand(user.getId(), concertId, seatId)
+                    );
+                    makePaymentUseCase.execute(
+                            new MakePaymentCommand(reservation.reservationId(), 500, PaymentMethod.CARD)
                     );
 
-                    // 2. 확정
-                    confirmReservationUseCase.execute(
-                            new ConfirmReservationCommand(reserveResult.reservationId())
-                    );
-
-                    // 3. 결제
-                    deductPointUseCase.execute(
-                            new DeductPointCommand(user.getId(), 500)
-                    );
-
-                    successCount.incrementAndGet();
+                    paidReservationIds.add(reservation.reservationId());
+                } catch (BusinessRuleViolationException expectedRaceLoss) {
+                    // Another request may reserve and pay the seat first.
                 } catch (Exception exception) {
-                    failCount.incrementAndGet();
+                    unexpectedFailures.add(exception);
                 } finally {
                     doneLatch.countDown();
                 }
             });
         }
 
-        startLatch.countDown(); // 🚀 동시에 출발
+        readyLatch.await();
+        startLatch.countDown();
         doneLatch.await();
         executor.shutdown();
 
-        // then
-        assertThat(successCount.get()).isEqualTo(1);
-        assertThat(failCount.get()).isEqualTo(2);
+        em.clear();
 
-        long confirmedCount = countReservationsBySeatAndStatus(seat, ReservationStatus.CONFIRMED);
+        assertThat(unexpectedFailures).isEmpty();
+        assertThat(paidReservationIds).hasSize(1);
 
-        assertThat(confirmedCount).isEqualTo(1);
+        UUID paidReservationId = paidReservationIds.iterator().next();
+        assertThat(countPaymentsByReservationId(paidReservationId)).isEqualTo(1);
+        assertThat(countReservationsBySeatAndStatus(seat, ReservationStatus.CONFIRMED)).isEqualTo(1);
+
+        List<Integer> balances = users.stream()
+                .map(user -> userRepository.findById(user.getId()).getPoints())
+                .toList();
+
+        assertThat(balances).containsExactlyInAnyOrder(500, 1_000, 1_000);
     }
 }
