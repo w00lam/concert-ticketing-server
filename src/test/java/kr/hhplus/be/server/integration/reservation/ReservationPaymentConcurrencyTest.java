@@ -107,7 +107,7 @@ public class ReservationPaymentConcurrencyTest extends ReservationIntegrationTes
         assertThat(successCount.get()).isEqualTo(1);
         assertThat(failCount.get()).isEqualTo(2);
 
-        long confirmedCount = reservationRepository.countBySeatAndStatus(seat, ReservationStatus.CONFIRMED);
+        long confirmedCount = countReservationsBySeatAndStatus(seat, ReservationStatus.CONFIRMED);
 
         assertThat(confirmedCount).isEqualTo(1);
     }

@@ -64,9 +64,9 @@ public class SeatReservationDistributedLockTest extends ReservationIntegrationTe
 
         assertThat(successCount).isEqualTo(1);
 
-        boolean exists = reservationRepository.existsBySeatAndStatus(seat, ReservationStatus.TEMP_HOLD);
+        long count = countReservationsBySeatAndStatus(seat, ReservationStatus.TEMP_HOLD);
 
-        assertThat(exists).isTrue();
+        assertThat(count).isEqualTo(1);
 
     }
 }

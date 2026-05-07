@@ -14,6 +14,7 @@ import kr.hhplus.be.server.concert.domain.model.Concert;
 import kr.hhplus.be.server.concert.domain.model.ConcertDate;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import kr.hhplus.be.server.payment.domain.model.PaymentMethod;
+import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
 import kr.hhplus.be.server.user.domain.model.User;
 
 import kr.hhplus.be.server.concert.infrastructure.persistence.ConcertDateRepositoryImpl;
@@ -74,7 +75,7 @@ public abstract class ReservationIntegrationTestBase {
     protected SeatRepositoryImpl seatRepository;
 
     @PersistenceContext
-    private EntityManager em;
+    protected EntityManager em;
 
     /*
      * =========================
@@ -171,5 +172,17 @@ public abstract class ReservationIntegrationTestBase {
     protected MakePaymentResult payReservation(UUID reservationId, int amount, PaymentMethod method) {
         MakePaymentCommand cmd = new MakePaymentCommand(reservationId, amount, method);
         return makePaymentUseCase.execute(cmd);
+    }
+
+    protected long countReservationsBySeatAndStatus(Seat seat, ReservationStatus status) {
+        return em.createQuery("""
+                        SELECT COUNT(r)
+                        FROM Reservation r
+                        WHERE r.seat = :seat
+                        AND r.status = :status
+                        """, Long.class)
+                .setParameter("seat", seat)
+                .setParameter("status", status)
+                .getSingleResult();
     }
 }
