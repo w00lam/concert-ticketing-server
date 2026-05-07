@@ -12,7 +12,7 @@ import java.util.UUID;
 public record PaymentResponse(
         @Schema(description = "결제 ID")
         UUID paymentId,
-        @Schema(description = "결제 상태", example = "PENDING")
+        @Schema(description = "결제 상태", example = "PAID")
         String status
 ) {
     public static PaymentResponse from(MakePaymentResult result) {

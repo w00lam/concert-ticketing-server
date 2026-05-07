@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -65,6 +66,17 @@ public class Payment {
                 .method(method)
                 .status(PaymentStatus.PENDING)
                 .paidAt(null)
+                .deleted(false)
+                .build();
+    }
+
+    public static Payment createPaid(Reservation reservation, int amount, PaymentMethod method, Clock clock) {
+        return Payment.builder()
+                .reservation(reservation)
+                .amount(amount)
+                .method(method)
+                .status(PaymentStatus.PAID)
+                .paidAt(LocalDateTime.now(clock))
                 .deleted(false)
                 .build();
     }

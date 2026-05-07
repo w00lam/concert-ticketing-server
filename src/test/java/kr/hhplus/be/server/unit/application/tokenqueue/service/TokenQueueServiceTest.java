@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 
+import java.time.Clock;
+import java.time.ZoneId;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +35,9 @@ public class TokenQueueServiceTest extends BaseUnitTest {
         when(redisTemplate.opsForZSet()).thenReturn(zSetOperations);
 
         TokenQueueRepositoryPort repository = new TokenQueueRepositoryImpl(redisTemplate);
-        tokenQueueService = new TokenQueueUseCaseImpl(repository);
+        ZoneId zone = ZoneId.systemDefault();
+        Clock clock = Clock.fixed(fixedNow().atZone(zone).toInstant(), zone);
+        tokenQueueService = new TokenQueueUseCaseImpl(repository, clock);
     }
 
     @Test

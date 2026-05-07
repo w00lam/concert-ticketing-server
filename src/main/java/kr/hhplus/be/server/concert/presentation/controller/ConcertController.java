@@ -52,7 +52,7 @@ public class ConcertController {
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
-    @GetMapping("/concerts/rankings")
+    @GetMapping("/rankings")
     @Operation(summary = "콘서트 예약 랭킹 조회", description = "예약 확정/취소 이벤트를 기반으로 집계된 콘서트 랭킹을 조회합니다.")
     public ResponseEntity<ApiResponse<ConcertRankingResponse>> rankings(
             @Parameter(description = "조회할 랭킹 개수") @RequestParam(defaultValue = "10") int limit

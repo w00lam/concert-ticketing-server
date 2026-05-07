@@ -99,9 +99,13 @@ components:
           format: uuid
         amount:
           type: integer
+        method:
+          type: string
+          enum: [CARD, CASH]
       required:
         - reservationId
         - amount
+        - method
 
     PaymentResponse:
       type: object
@@ -111,7 +115,7 @@ components:
           format: uuid
         status:
           type: string
-          enum: [SUCCESS, FAILED]
+          enum: [PENDING, PAID, FAILED, CANCELED]
       required:
         - paymentId
         - status
@@ -294,6 +298,7 @@ paths:
             example:
               reservationId: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
               amount: 300000
+              method: CARD
       responses:
         '201':
           description: Payment successful, reservation confirmed
@@ -303,7 +308,7 @@ paths:
                 $ref: '#/components/schemas/PaymentResponse'
               example:
                 paymentId: "9c858901-8a57-4791-81fe-4c455b099bc9"
-                status: SUCCESS
+                status: PAID
         '400':
           description: Bad request
           content:

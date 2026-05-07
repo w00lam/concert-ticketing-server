@@ -6,6 +6,8 @@ import kr.hhplus.be.server.payment.domain.model.Payment;
 import kr.hhplus.be.server.payment.domain.model.PaymentMethod;
 import kr.hhplus.be.server.reservation.domain.model.Reservation;
 import org.springframework.stereotype.Component;
+
+import java.time.Clock;
 /**
  * Encapsulates domain rules for the payment feature.
  */
@@ -18,5 +20,9 @@ public class PaymentDomainService {
 
     public Payment createPending(Reservation reservation, int amount, PaymentMethod method) {
         return Payment.createPending(reservation, amount, method);
+    }
+
+    public Payment createPaid(Reservation reservation, int amount, PaymentMethod method, Clock clock) {
+        return Payment.createPaid(reservation, amount, method, clock);
     }
 }

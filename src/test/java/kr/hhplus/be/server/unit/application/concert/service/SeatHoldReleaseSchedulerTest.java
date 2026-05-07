@@ -5,11 +5,12 @@ import kr.hhplus.be.server.concert.application.service.SeatHoldReleaseScheduler;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -23,7 +24,6 @@ public class SeatHoldReleaseSchedulerTest {
     @Mock
     private SeatRepositoryPort seatRepository;
 
-    @InjectMocks
     private SeatHoldReleaseScheduler scheduler;
 
     private Seat seat1;
@@ -32,8 +32,12 @@ public class SeatHoldReleaseSchedulerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        seat1 = Seat.builder().held(true).holdUntil(LocalDateTime.now().minusMinutes(1)).deleted(false).build();
-        seat2 = Seat.builder().held(true).holdUntil(LocalDateTime.now().minusMinutes(1)).deleted(false).build();
+        LocalDateTime now = LocalDateTime.of(2035, 12, 12, 12, 12);
+        ZoneId zone = ZoneId.systemDefault();
+        Clock clock = Clock.fixed(now.atZone(zone).toInstant(), zone);
+        scheduler = new SeatHoldReleaseScheduler(seatRepository, clock);
+        seat1 = Seat.builder().held(true).holdUntil(now.minusMinutes(1)).deleted(false).build();
+        seat2 = Seat.builder().held(true).holdUntil(now.minusMinutes(1)).deleted(false).build();
     }
 
     @Test

@@ -8,6 +8,9 @@ import kr.hhplus.be.server.reservation.domain.model.Reservation;
 import kr.hhplus.be.server.unit.BaseUnitTest;
 import org.junit.jupiter.api.*;
 
+import java.time.Clock;
+import java.time.ZoneId;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PaymentDomainServiceTest extends BaseUnitTest {
@@ -37,6 +40,22 @@ public class PaymentDomainServiceTest extends BaseUnitTest {
         assertEquals(reservation, payment.getReservation());
         assertEquals(PaymentStatus.PENDING, payment.getStatus());
         assertNull(payment.getPaidAt());
+        assertFalse(payment.isDeleted());
+    }
+
+    @Test
+    @DisplayName("createPaid: Payment 객체 정상 생성")
+    void createPaid_createsPayment() {
+        Reservation reservation = Reservation.builder().id(fixedUUID()).build();
+        ZoneId zone = ZoneId.systemDefault();
+        Clock clock = Clock.fixed(fixedNow().atZone(zone).toInstant(), zone);
+        Payment payment = service.createPaid(reservation, 5000, PaymentMethod.CARD, clock);
+
+        assertNotNull(payment);
+        assertEquals(5000, payment.getAmount());
+        assertEquals(reservation, payment.getReservation());
+        assertEquals(PaymentStatus.PAID, payment.getStatus());
+        assertEquals(fixedNow(), payment.getPaidAt());
         assertFalse(payment.isDeleted());
     }
 }

@@ -10,9 +10,13 @@ import kr.hhplus.be.server.payment.domain.service.PaymentDomainService;
 import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEvent;
 import kr.hhplus.be.server.reservation.application.port.out.ReservationRepositoryPort;
 import kr.hhplus.be.server.reservation.domain.model.Reservation;
+import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Clock;
 /**
  * Implements the payment use case and coordinates transactional work.
  */
@@ -24,15 +28,24 @@ public class MakePaymentUseCaseImpl implements MakePaymentUseCase {
     private final PaymentRepositoryPort paymentRepositoryPort;
     private final PaymentDomainService paymentDomainService;
     private final DomainEventPublisher eventPublisher;
+    private final Clock clock;
 
     @Override
     @Transactional
     public MakePaymentResult execute(MakePaymentCommand command) {
-        Reservation reservation = reservationRepositoryPort.findById(command.reservationId());
-
         paymentDomainService.validateAmount(command.amount());
 
-        Payment payment = paymentDomainService.createPending(reservation, command.amount(), command.method());
+        boolean confirmed = reservationRepositoryPort.confirmIfNotExpired(command.reservationId());
+        if (!confirmed) {
+            throw new BusinessRuleViolationException(
+                    ErrorCode.RESERVATION_EXPIRED_OR_PROCESSED,
+                    "예약이 만료되었거나 이미 처리되었습니다."
+            );
+        }
+
+        Reservation reservation = reservationRepositoryPort.findById(command.reservationId());
+
+        Payment payment = paymentDomainService.createPaid(reservation, command.amount(), command.method(), clock);
 
         Payment saved = paymentRepositoryPort.save(payment);
 

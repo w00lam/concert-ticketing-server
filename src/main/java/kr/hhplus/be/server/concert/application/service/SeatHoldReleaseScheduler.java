@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 /**
@@ -17,11 +18,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SeatHoldReleaseScheduler {
     private final SeatRepositoryPort seatRepositoryPort;
+    private final Clock clock;
 
     @Transactional
     @Scheduled(fixedRate = 60000)
     public void releaseExpiredHolds() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(clock);
         List<Seat> seats = seatRepositoryPort.findSeatsByConcertDateIdForHoldRelease(now);
 
         for (Seat seat : seats) {
