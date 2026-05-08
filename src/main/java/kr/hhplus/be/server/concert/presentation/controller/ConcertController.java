@@ -12,7 +12,7 @@ import kr.hhplus.be.server.concert.application.service.GetConcertRankingService;
 import kr.hhplus.be.server.concert.presentation.dto.ConcertDateResponse;
 import kr.hhplus.be.server.concert.presentation.dto.ConcertRankingResponse;
 import kr.hhplus.be.server.concert.presentation.dto.SeatResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/concerts")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Tag(name = "Concert", description = "콘서트 일정, 좌석, 예약 랭킹 API")
 public class ConcertController {
     private final GetConcertDatesUseCase getConcertDatesUseCase;

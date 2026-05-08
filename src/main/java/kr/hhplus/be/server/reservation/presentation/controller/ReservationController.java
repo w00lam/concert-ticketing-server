@@ -12,7 +12,7 @@ import kr.hhplus.be.server.reservation.application.port.in.MakeReservationUseCas
 import kr.hhplus.be.server.reservation.presentation.dto.ConfirmReservationResponse;
 import kr.hhplus.be.server.reservation.presentation.dto.MakeReservationRequest;
 import kr.hhplus.be.server.reservation.presentation.dto.MakeReservationResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +27,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/reservations")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Tag(name = "Reservation", description = "좌석 예약 및 예약 확정 API")
 public class ReservationController {
     private final MakeReservationUseCase makeReservationUseCase;
