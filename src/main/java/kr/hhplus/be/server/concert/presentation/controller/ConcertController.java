@@ -8,16 +8,21 @@ import kr.hhplus.be.server.concert.application.port.in.concertdate.GetConcertDat
 import kr.hhplus.be.server.concert.application.port.in.concertdate.GetConcertDatesUseCase;
 import kr.hhplus.be.server.concert.application.port.in.seat.GetSeatsQuery;
 import kr.hhplus.be.server.concert.application.port.in.seat.GetSeatsUseCase;
-import kr.hhplus.be.server.concert.application.service.GetConcertRankingService;
+import kr.hhplus.be.server.concert.application.service.ConcertRankingService;
 import kr.hhplus.be.server.concert.presentation.dto.ConcertDateResponse;
 import kr.hhplus.be.server.concert.presentation.dto.ConcertRankingResponse;
 import kr.hhplus.be.server.concert.presentation.dto.SeatResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
+
 /**
  * Handles HTTP requests for the concert feature.
  */
@@ -29,7 +34,7 @@ import java.util.UUID;
 public class ConcertController {
     private final GetConcertDatesUseCase getConcertDatesUseCase;
     private final GetSeatsUseCase getSeatsUseCase;
-    private final GetConcertRankingService rankingService;
+    private final ConcertRankingService rankingService;
 
     @GetMapping("/{concertId}/dates")
     @Operation(summary = "콘서트 날짜 조회", description = "콘서트 ID에 해당하는 공연 날짜 목록을 조회합니다.")

@@ -6,14 +6,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-/**
- * Provides application service behavior for the concert feature.
- */
 
+/**
+ * Provides application service behavior for concert ranking.
+ */
 
 @Service
 @RequiredArgsConstructor
-public class GetConcertRankingService {
+public class ConcertRankingService {
     private final ConcertRankingRepositoryPort repository;
 
     public List<ConcertRankingItem> getTopRankings(int limit) {

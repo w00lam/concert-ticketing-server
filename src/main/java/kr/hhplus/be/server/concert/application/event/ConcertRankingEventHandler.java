@@ -1,12 +1,13 @@
 package kr.hhplus.be.server.concert.application.event;
 
-import kr.hhplus.be.server.concert.application.service.GetConcertRankingService;
+import kr.hhplus.be.server.concert.application.service.ConcertRankingService;
 import kr.hhplus.be.server.reservation.application.event.ReservationCanceledEvent;
 import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+
 /**
  * Handles events raised by the reservation event flow.
  */
@@ -14,7 +15,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 @RequiredArgsConstructor
 public class ConcertRankingEventHandler {
-    private final GetConcertRankingService rankingService;
+    private final ConcertRankingService rankingService;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onConfirmed(ReservationConfirmedEvent event) {
