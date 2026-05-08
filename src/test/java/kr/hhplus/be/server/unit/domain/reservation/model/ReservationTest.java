@@ -21,8 +21,16 @@ public class ReservationTest extends BaseUnitTest {
     @Test
     @DisplayName("Reservation.create creates a temporary hold with fixed expiration")
     void testCreateReservation() {
-        User user = new User();
-        Seat seat = new Seat();
+        User user = User.builder()
+                .email("reservation-test@example.com")
+                .name("reservation tester")
+                .build();
+        Seat seat = Seat.builder()
+                .section("A")
+                .row("1")
+                .number("1")
+                .grade("VIP")
+                .build();
         Instant fixedInstant = fixedNow().atZone(ZoneId.of("UTC")).toInstant();
         Clock fixedClock = Clock.fixed(fixedInstant, ZoneId.of("UTC"));
         ReservationExpirationPolicy expirationPolicy = now -> fixedNow().plusMinutes(5);

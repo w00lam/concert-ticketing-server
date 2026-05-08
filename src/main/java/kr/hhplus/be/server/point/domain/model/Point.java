@@ -16,8 +16,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "POINTS")
 @EntityListeners(AuditingEntityListener.class)
 public class Point {

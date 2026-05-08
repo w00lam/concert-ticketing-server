@@ -17,7 +17,7 @@ import java.util.UUID;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "concert_dates", uniqueConstraints = {@UniqueConstraint(name = "uk_concert_event_date", columnNames = {"concert_id", "event_date"})})
 public class ConcertDate {
