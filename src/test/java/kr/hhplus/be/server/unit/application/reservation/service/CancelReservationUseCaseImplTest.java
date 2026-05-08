@@ -17,12 +17,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 public class CancelReservationUseCaseImplTest extends BaseUnitTest {
     @Mock
     ReservationRepositoryPort reservationRepository;
+
     @Mock
     DomainEventPublisher eventPublisher;
 
@@ -34,7 +37,6 @@ public class CancelReservationUseCaseImplTest extends BaseUnitTest {
 
     @Test
     void 확정된_예약을_취소하면_콘서트_예약_취소_이벤트가_발행된다() {
-        // given
         var concert = ConcertFixture.concert(fixedUUID());
         var concertDate = ConcertFixture.concertDate(concert);
         var seat = ConcertFixture.seat(concertDate);
@@ -42,10 +44,8 @@ public class CancelReservationUseCaseImplTest extends BaseUnitTest {
 
         when(reservationRepository.findById(fixedUUID2())).thenReturn(reservation);
 
-        // when
         useCase.execute(new CancelReservationCommand(fixedUUID2()));
 
-        // then
         assertThat(reservation.getStatus()).isEqualTo(ReservationStatus.CANCELED);
 
         verify(eventPublisher).publish(eventCaptor.capture());
@@ -60,15 +60,12 @@ public class CancelReservationUseCaseImplTest extends BaseUnitTest {
 
     @Test
     void 확정되지_않은_예약을_취소하면_이벤트는_발행되지_않는다() {
-        // given
         Reservation reservation = ReservationFixture.tempHold(fixedUUID());
 
         when(reservationRepository.findById(fixedUUID())).thenReturn(reservation);
 
-        // when
         useCase.execute(new CancelReservationCommand(fixedUUID()));
 
-        // then
         verify(eventPublisher, never()).publish(any());
     }
 }

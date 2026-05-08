@@ -7,7 +7,6 @@ import kr.hhplus.be.server.reservation.application.port.in.CancelReservationResu
 import kr.hhplus.be.server.reservation.application.port.in.CancelReservationUseCase;
 import kr.hhplus.be.server.reservation.application.port.out.ReservationRepositoryPort;
 import kr.hhplus.be.server.reservation.domain.model.Reservation;
-import kr.hhplus.be.server.reservation.domain.model.ReservationExceptions;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,11 +26,6 @@ public class CancelReservationUseCaseImpl implements CancelReservationUseCase {
     @Transactional
     public CancelReservationResult execute(CancelReservationCommand command) {
         Reservation reservation = reservationRepository.findById(command.reservationId());
-
-        if (reservation.getStatus() == ReservationStatus.CANCELED) {
-            throw ReservationExceptions.alreadyCancelled();
-        }
-
         boolean wasConfirmed = reservation.getStatus() == ReservationStatus.CONFIRMED;
 
         reservation.cancel();
