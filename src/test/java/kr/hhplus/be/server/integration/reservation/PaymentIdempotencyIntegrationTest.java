@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.integration.reservation;
 
 import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.concert.domain.model.Concert;
 import kr.hhplus.be.server.concert.domain.model.ConcertDate;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
@@ -44,7 +45,9 @@ public class PaymentIdempotencyIntegrationTest extends ReservationIntegrationTes
 
         assertThatThrownBy(() ->
                 makePaymentUseCase.execute(new MakePaymentCommand(reservationId, 6_000, PaymentMethod.CARD))
-        ).isInstanceOf(BusinessRuleViolationException.class);
+        ).isInstanceOfSatisfying(BusinessRuleViolationException.class, exception ->
+                assertThat(exception.errorCode()).isEqualTo(ErrorCode.PAYMENT_ALREADY_PROCESSED)
+        );
 
         assertThat(countPaymentsByReservationId(reservationId)).isEqualTo(1);
 
@@ -72,7 +75,9 @@ public class PaymentIdempotencyIntegrationTest extends ReservationIntegrationTes
 
         assertThatThrownBy(() ->
                 makePaymentUseCase.execute(new MakePaymentCommand(reservationId, 5_000, PaymentMethod.CARD))
-        ).isInstanceOf(BusinessRuleViolationException.class);
+        ).isInstanceOfSatisfying(BusinessRuleViolationException.class, exception ->
+                assertThat(exception.errorCode()).isEqualTo(ErrorCode.INSUFFICIENT_POINTS)
+        );
 
         em.clear();
         assertThat(userRepository.findById(user.getId()).getPoints()).isEqualTo(1_000);

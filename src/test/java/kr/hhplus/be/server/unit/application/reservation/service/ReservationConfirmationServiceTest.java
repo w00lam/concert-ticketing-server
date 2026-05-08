@@ -2,6 +2,7 @@ package kr.hhplus.be.server.unit.application.reservation.service;
 
 import kr.hhplus.be.server.common.application.event.DomainEventPublisher;
 import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEvent;
 import kr.hhplus.be.server.reservation.application.port.out.ReservationRepositoryPort;
 import kr.hhplus.be.server.reservation.application.service.ReservationConfirmationService;
@@ -72,7 +73,9 @@ public class ReservationConfirmationServiceTest extends BaseUnitTest {
         when(reservationRepository.confirmIfNotExpired(fixedUUID(), fixedNow())).thenReturn(false);
 
         assertThatThrownBy(() -> service.confirm(fixedUUID()))
-                .isInstanceOf(BusinessRuleViolationException.class);
+                .isInstanceOfSatisfying(BusinessRuleViolationException.class, exception ->
+                        assertThat(exception.errorCode()).isEqualTo(ErrorCode.RESERVATION_EXPIRED_OR_PROCESSED)
+                );
 
         verify(eventPublisher, never()).publish(any());
     }

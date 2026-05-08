@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.unit.application.payment.service;
 
 import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.payment.application.port.in.MakePaymentCommand;
 import kr.hhplus.be.server.payment.application.port.out.PaymentRepositoryPort;
 import kr.hhplus.be.server.payment.application.service.PaymentProcessor;
@@ -90,10 +91,15 @@ public class PaymentProcessorTest extends BaseUnitTest {
         when(paymentRepositoryPort.findByReservationId(reservationId)).thenReturn(Optional.empty());
         when(reservationRepositoryPort.findById(reservationId)).thenReturn(reservation);
         when(reservationConfirmationService.confirm(reservationId))
-                .thenThrow(BusinessRuleViolationException.class);
+                .thenThrow(new BusinessRuleViolationException(
+                        ErrorCode.RESERVATION_EXPIRED_OR_PROCESSED,
+                        "예약이 만료되었거나 이미 처리되었습니다."
+                ));
 
-        assertThrows(BusinessRuleViolationException.class, () -> paymentProcessor.process(command));
+        BusinessRuleViolationException exception =
+                assertThrows(BusinessRuleViolationException.class, () -> paymentProcessor.process(command));
 
+        assertEquals(ErrorCode.RESERVATION_EXPIRED_OR_PROCESSED, exception.errorCode());
         assertEquals(10000, user.getPoints());
         verify(reservationConfirmationService).confirm(reservationId);
         verify(paymentRepositoryPort, never()).save(any(Payment.class));
@@ -112,8 +118,10 @@ public class PaymentProcessorTest extends BaseUnitTest {
         when(paymentRepositoryPort.findByReservationId(reservationId)).thenReturn(Optional.empty());
         when(reservationRepositoryPort.findById(reservationId)).thenReturn(reservation);
 
-        assertThrows(BusinessRuleViolationException.class, () -> paymentProcessor.process(command));
+        BusinessRuleViolationException exception =
+                assertThrows(BusinessRuleViolationException.class, () -> paymentProcessor.process(command));
 
+        assertEquals(ErrorCode.INSUFFICIENT_POINTS, exception.errorCode());
         assertEquals(5000, user.getPoints());
         verify(reservationConfirmationService, never()).confirm(any());
         verify(paymentRepositoryPort, never()).save(any(Payment.class));
@@ -148,8 +156,10 @@ public class PaymentProcessorTest extends BaseUnitTest {
         doNothing().when(paymentDomainService).validateAmount(amount + 1);
         when(paymentRepositoryPort.findByReservationId(reservationId)).thenReturn(Optional.of(existingPayment));
 
-        assertThrows(BusinessRuleViolationException.class, () -> paymentProcessor.process(command));
+        BusinessRuleViolationException exception =
+                assertThrows(BusinessRuleViolationException.class, () -> paymentProcessor.process(command));
 
+        assertEquals(ErrorCode.PAYMENT_ALREADY_PROCESSED, exception.errorCode());
         verify(reservationConfirmationService, never()).confirm(any());
         verify(paymentRepositoryPort, never()).save(any(Payment.class));
     }
