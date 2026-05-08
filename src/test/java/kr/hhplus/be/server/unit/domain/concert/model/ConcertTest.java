@@ -12,14 +12,10 @@ public class ConcertTest extends BaseUnitTest {
     @DisplayName("Concert 객체 생성 시 Builder 필드 검증")
     void testConcertBuilderInitialization() {
         // when
-        Concert concert = Concert.builder()
-                .id(fixedUUID())
-                .title("Test Concert")
-                .description("Test Description")
-                .build();
+        Concert concert = Concert.create("Test Concert", "Test Description");
 
         // then
-        assertEquals(fixedUUID(), concert.getId());
+        assertNull(concert.getId());
         assertEquals("Test Concert", concert.getTitle());
         assertEquals("Test Description", concert.getDescription());
 
@@ -36,11 +32,7 @@ public class ConcertTest extends BaseUnitTest {
     @DisplayName("Concert에 ConcertDate 추가/삭제 기능 검증")
     void testAddAndRemoveConcertDate() {
         // given
-        Concert concert = Concert.builder()
-                .id(fixedUUID())
-                .title("Test Concert")
-                .description("Test Description")
-                .build();
+        Concert concert = Concert.create("Test Concert", "Test Description");
 
         ConcertDate concertDate = ConcertDate.builder()
                 .id(fixedUUID())

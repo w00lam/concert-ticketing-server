@@ -12,13 +12,7 @@ public class UserTest extends BaseUnitTest {
     @Test
     @DisplayName("addPoints: 양수 금액 추가")
     void testAddPoints() {
-        User user = User.builder()
-                .id(fixedUUID())
-                .email("test@example.com")
-                .name("Test User")
-                .points(10)
-                .deleted(false)
-                .build();
+        User user = userWithPoints(10);
 
         user.addPoints(5);
         assertEquals(15, user.getPoints());
@@ -27,13 +21,7 @@ public class UserTest extends BaseUnitTest {
     @Test
     @DisplayName("addPoints: 음수 금액 예외")
     void testAddPointsNegative() {
-        User user = User.builder()
-                .id(fixedUUID())
-                .email("test@example.com")
-                .name("Test User")
-                .points(10)
-                .deleted(false)
-                .build();
+        User user = userWithPoints(10);
 
         assertThrows(IllegalArgumentException.class, () -> user.addPoints(-5));
     }
@@ -41,13 +29,7 @@ public class UserTest extends BaseUnitTest {
     @Test
     @DisplayName("deductPoints: 충분한 포인트 차감")
     void testDeductPoints() {
-        User user = User.builder()
-                .id(fixedUUID())
-                .email("test@example.com")
-                .name("Test User")
-                .points(10)
-                .deleted(false)
-                .build();
+        User user = userWithPoints(10);
 
         user.deductPoints(5);
         assertEquals(5, user.getPoints());
@@ -56,13 +38,7 @@ public class UserTest extends BaseUnitTest {
     @Test
     @DisplayName("deductPoints: 음수 금액 예외")
     void testDeductPointsNegative() {
-        User user = User.builder()
-                .id(fixedUUID())
-                .email("test@example.com")
-                .name("Test User")
-                .points(10)
-                .deleted(false)
-                .build();
+        User user = userWithPoints(10);
 
         assertThrows(IllegalArgumentException.class, () -> user.deductPoints(-5));
     }
@@ -70,14 +46,14 @@ public class UserTest extends BaseUnitTest {
     @Test
     @DisplayName("deductPoints: 부족한 포인트 예외")
     void testDeductPointsInsufficient() {
-        User user = User.builder()
-                .id(fixedUUID())
-                .email("test@example.com")
-                .name("Test User")
-                .points(5)
-                .deleted(false)
-                .build();
+        User user = userWithPoints(5);
 
         assertThrows(IllegalStateException.class, () -> user.deductPoints(10));
+    }
+
+    private User userWithPoints(int points) {
+        User user = User.create("test@example.com", "Test User");
+        user.addPoints(points);
+        return user;
     }
 }

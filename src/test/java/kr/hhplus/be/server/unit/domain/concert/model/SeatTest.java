@@ -16,11 +16,7 @@ public class SeatTest extends BaseUnitTest {
     @DisplayName("Seat 객체 생성 시 필수 필드와 기본값이 올바르게 초기화되어야 한다")
     void testSeatBuilderInitialization() {
         // given
-        Concert concert = Concert.builder()
-                .id(fixedUUID())
-                .title("Test Concert")
-                .description("Test Description")
-                .build();
+        Concert concert = Concert.create("Test Concert", "Test Description");
 
         ConcertDate concertDate = ConcertDate.builder()
                 .id(fixedUUID())
@@ -30,18 +26,10 @@ public class SeatTest extends BaseUnitTest {
                 .build();
 
         // when
-        Seat seat = Seat.builder()
-                .id(fixedUUID())
-                .concertDate(concertDate)
-                .section("A")
-                .row("1")
-                .number("01")
-                .grade("VIP")
-                .deleted(false)
-                .build();
+        Seat seat = Seat.create(concertDate, "A", "1", "01", "VIP");
 
         // then
-        assertNotNull(seat.getId(), "UUID가 생성되어야 한다");
+        assertNull(seat.getId(), "id는 JPA가 영속화 시점에 생성한다");
         assertEquals(concertDate, seat.getConcertDate(), "ConcertDate 연관관계가 올바르게 설정되어야 한다");
         assertEquals("A", seat.getSection());
         assertEquals("1", seat.getRow());

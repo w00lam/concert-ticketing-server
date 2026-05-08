@@ -63,4 +63,14 @@ public class Seat {
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
+    public static Seat create(ConcertDate concertDate, String section, String row, String number, String grade) {
+        return Seat.builder()
+                .concertDate(concertDate)
+                .section(section)
+                .row(row)
+                .number(number)
+                .grade(grade)
+                .deleted(false)
+                .build();
+    }
 }

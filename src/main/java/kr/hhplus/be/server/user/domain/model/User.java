@@ -58,6 +58,15 @@ public class User {
     @Column(nullable = false)
     private boolean deleted = false;
 
+    public static User create(String email, String name) {
+        return User.builder()
+                .email(email)
+                .name(name)
+                .points(0)
+                .deleted(false)
+                .build();
+    }
+
     public void addPoints(int amount) {
         AmountValidator.requireNonNegative(amount);
         this.points += amount;

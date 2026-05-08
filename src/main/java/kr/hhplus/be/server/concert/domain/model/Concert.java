@@ -50,6 +50,17 @@ public class Concert {
     )
     private List<ConcertDate> concertDates = new ArrayList<>();
 
+    public static Concert create(String title) {
+        return create(title, null);
+    }
+
+    public static Concert create(String title, String description) {
+        return Concert.builder()
+                .title(title)
+                .description(description)
+                .build();
+    }
+
     // 연관 엔티티 추가 헬퍼 메서드
     public void addDate(ConcertDate concertDate) {
         concertDates.add(concertDate);

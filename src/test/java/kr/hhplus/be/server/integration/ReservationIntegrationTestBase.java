@@ -30,7 +30,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @SpringBootTest
@@ -83,14 +82,7 @@ public abstract class ReservationIntegrationTestBase {
      * =========================
      */
     protected User createUser() {
-        User user = User.builder()
-                .email("test-user-" + UUID.randomUUID() + "@example.com")
-                .name("nickname")
-                .points(0)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .deleted(false)
-                .build();
+        User user = User.create("test-user-" + UUID.randomUUID() + "@example.com", "nickname");
 
 
         User saved = userRepository.save(user);
@@ -99,12 +91,8 @@ public abstract class ReservationIntegrationTestBase {
     }
 
     protected User createUserWithPoints(int points) {
-        User user = User.builder()
-                .email("test-user-" + UUID.randomUUID() + "@example.com")
-                .name("tester")
-                .points(points)
-                .deleted(false)
-                .build();
+        User user = User.create("test-user-" + UUID.randomUUID() + "@example.com", "tester");
+        user.addPoints(points);
 
         User saved = userRepository.save(user);
 
@@ -127,14 +115,7 @@ public abstract class ReservationIntegrationTestBase {
                 ConcertDate.create(concert, LocalDate.now())
         );
 
-        Seat seat = Seat.builder()
-                .concertDate(concertDate)
-                .section("A")
-                .row("1")
-                .number("1")
-                .grade("VIP")
-                .deleted(false)
-                .build();
+        Seat seat = Seat.create(concertDate, "A", "1", "1", "VIP");
 
         Seat saved = seatRepository.save(seat);
 
@@ -142,13 +123,7 @@ public abstract class ReservationIntegrationTestBase {
     }
 
     protected Seat createSeatWithConcert(ConcertDate concertDate, String section, String row, String number, String grade) {
-        Seat seat = Seat.builder()
-                .concertDate(concertDate)
-                .section(section)
-                .row(row)
-                .number(number)
-                .grade(grade)
-                .build();
+        Seat seat = Seat.create(concertDate, section, row, number, grade);
         Seat saved = seatRepository.save(seat);
 
         return saved;
