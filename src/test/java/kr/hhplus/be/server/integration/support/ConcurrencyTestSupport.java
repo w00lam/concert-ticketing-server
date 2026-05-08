@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 
 public final class ConcurrencyTestSupport {
     private ConcurrencyTestSupport() {
@@ -49,5 +50,10 @@ public final class ConcurrencyTestSupport {
     }
 
     public record Result<T>(List<T> successes, List<Throwable> failures) {
+        public long matchingSuccessCount(Predicate<? super T> predicate) {
+            return successes.stream()
+                    .filter(predicate)
+                    .count();
+        }
     }
 }

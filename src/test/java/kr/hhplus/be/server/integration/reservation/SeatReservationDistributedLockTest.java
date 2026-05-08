@@ -1,9 +1,9 @@
 package kr.hhplus.be.server.integration.reservation;
 
 import kr.hhplus.be.server.concert.domain.model.Concert;
+import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
 import kr.hhplus.be.server.integration.support.ConcurrencyTestSupport;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
-import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,6 @@ public class SeatReservationDistributedLockTest extends ReservationIntegrationTe
     @Test
     @DisplayName("동시에 여러 사용자가 동일 좌석 예약 시도 시 하나만 성공한다 (Redis 분산락)")
     void only_one_user_can_hold_seat_with_distributed_lock() throws Exception {
-        // given
         int threadCount = 10;
         var concert = Concert.builder().title("concert").build();
         var seat = createSeat();
@@ -27,7 +26,6 @@ public class SeatReservationDistributedLockTest extends ReservationIntegrationTe
             userIds.add(createUser().getId());
         }
 
-        // when
         var result = ConcurrencyTestSupport.runConcurrently(threadCount, index -> {
             try {
                 reserveSeat(userIds.get(index), concert.getId(), seat.getId());
@@ -37,17 +35,8 @@ public class SeatReservationDistributedLockTest extends ReservationIntegrationTe
             }
         });
 
-        // then
-        long successCount = result.successes().stream()
-                .filter(Boolean::booleanValue)
-                .count();
-
         assertThat(result.failures()).isEmpty();
-        assertThat(successCount).isEqualTo(1);
-
-        long count = countReservationsBySeatAndStatus(seat, ReservationStatus.TEMP_HOLD);
-
-        assertThat(count).isEqualTo(1);
-
+        assertThat(result.matchingSuccessCount(Boolean::booleanValue)).isEqualTo(1);
+        assertThat(countReservationsBySeatAndStatus(seat, ReservationStatus.TEMP_HOLD)).isEqualTo(1);
     }
 }
