@@ -2,8 +2,6 @@ package kr.hhplus.be.server.reservation.domain.model;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
-import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
-import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.user.domain.model.User;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,14 +16,17 @@ import java.util.UUID;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "RESERVATIONS",
         indexes = {
                 @Index(name = "idx_status_tempHoldExpiresAt", columnList = "status,tempHoldExpiresAt")
         }
 )
+/**
+ * Represents core state and rules in the reservation domain.
+ */
 public class Reservation {
     @Id
     @GeneratedValue
@@ -74,7 +75,7 @@ public class Reservation {
     }
     public void cancel() {
         if (this.status == ReservationStatus.CANCELED) {
-            throw new BusinessRuleViolationException(ErrorCode.RESERVATION_ALREADY_CANCELLED, "이미 취소된 예약입니다.");
+            throw ReservationExceptions.alreadyCancelled();
         }
 
         this.status = ReservationStatus.CANCELED;

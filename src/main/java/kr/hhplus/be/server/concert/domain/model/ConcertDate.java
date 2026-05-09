@@ -9,12 +9,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
+/**
+ * Represents core state and rules in the concert domain.
+ */
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "concert_dates", uniqueConstraints = {@UniqueConstraint(name = "uk_concert_event_date", columnNames = {"concert_id", "event_date"})})
 public class ConcertDate {

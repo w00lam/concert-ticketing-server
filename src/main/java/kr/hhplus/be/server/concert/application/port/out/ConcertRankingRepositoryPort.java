@@ -4,6 +4,9 @@ import kr.hhplus.be.server.concert.application.service.ConcertRankingItem;
 
 import java.util.List;
 import java.util.UUID;
+/**
+ * Defines the output port for concert persistence.
+ */
 
 public interface ConcertRankingRepositoryPort {
     void increase(UUID concertId, long delta);

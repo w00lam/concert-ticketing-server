@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.unit.domain.reservation.model;
 
+import kr.hhplus.be.server.concert.domain.model.Concert;
+import kr.hhplus.be.server.concert.domain.model.ConcertDate;
 import kr.hhplus.be.server.concert.domain.model.seat.Seat;
 import kr.hhplus.be.server.reservation.domain.model.Reservation;
 import kr.hhplus.be.server.reservation.domain.model.ReservationExpirationPolicy;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,8 +24,9 @@ public class ReservationTest extends BaseUnitTest {
     @Test
     @DisplayName("Reservation.create creates a temporary hold with fixed expiration")
     void testCreateReservation() {
-        User user = new User();
-        Seat seat = new Seat();
+        User user = User.create("reservation-test@example.com", "reservation tester");
+        ConcertDate concertDate = ConcertDate.create(Concert.create("reservation concert"), LocalDate.now());
+        Seat seat = Seat.create(concertDate, "A", "1", "1", "VIP");
         Instant fixedInstant = fixedNow().atZone(ZoneId.of("UTC")).toInstant();
         Clock fixedClock = Clock.fixed(fixedInstant, ZoneId.of("UTC"));
         ReservationExpirationPolicy expirationPolicy = now -> fixedNow().plusMinutes(5);

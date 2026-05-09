@@ -12,10 +12,9 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 @Table(
         name = "seats",
@@ -26,6 +25,9 @@ import java.util.UUID;
         indexes = {@Index(name = "idx_concert_date_section_seat_row",
                 columnList = "concert_date_id, section, seat_row")}
 )
+/**
+ * Represents core state and rules in the concert domain.
+ */
 public class Seat {
     @Id
     @GeneratedValue
@@ -61,11 +63,14 @@ public class Seat {
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
-    @Builder.Default
-    @Column(name = "held", nullable = false)
-    private boolean held = false;
-
-    @Column(name = "hold_until")
-    private LocalDateTime holdUntil;
-
+    public static Seat create(ConcertDate concertDate, String section, String row, String number, String grade) {
+        return Seat.builder()
+                .concertDate(concertDate)
+                .section(section)
+                .row(row)
+                .number(number)
+                .grade(grade)
+                .deleted(false)
+                .build();
+    }
 }

@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.unit.application.event.listener;
 
-import kr.hhplus.be.server.application.event.listener.ReservationConfirmedEventListener;
-import kr.hhplus.be.server.application.event.port.out.ReservationEventProducerPort;
+import kr.hhplus.be.server.reservation.application.event.listener.ReservationConfirmedEventListener;
+import kr.hhplus.be.server.reservation.application.port.out.ReservationEventProducerPort;
 import kr.hhplus.be.server.reservation.application.event.ReservationConfirmedEvent;
 import kr.hhplus.be.server.unit.BaseUnitTest;
 import org.junit.jupiter.api.DisplayName;

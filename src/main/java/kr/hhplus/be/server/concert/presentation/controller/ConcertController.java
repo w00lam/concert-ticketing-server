@@ -8,25 +8,33 @@ import kr.hhplus.be.server.concert.application.port.in.concertdate.GetConcertDat
 import kr.hhplus.be.server.concert.application.port.in.concertdate.GetConcertDatesUseCase;
 import kr.hhplus.be.server.concert.application.port.in.seat.GetSeatsQuery;
 import kr.hhplus.be.server.concert.application.port.in.seat.GetSeatsUseCase;
-import kr.hhplus.be.server.concert.application.service.GetConcertRankingService;
+import kr.hhplus.be.server.concert.application.service.ConcertRankingService;
 import kr.hhplus.be.server.concert.presentation.dto.ConcertDateResponse;
 import kr.hhplus.be.server.concert.presentation.dto.ConcertRankingResponse;
 import kr.hhplus.be.server.concert.presentation.dto.SeatResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Handles HTTP requests for the concert feature.
+ */
+
 @RestController
 @RequestMapping("/concerts")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Tag(name = "Concert", description = "콘서트 일정, 좌석, 예약 랭킹 API")
 public class ConcertController {
     private final GetConcertDatesUseCase getConcertDatesUseCase;
     private final GetSeatsUseCase getSeatsUseCase;
-    private final GetConcertRankingService rankingService;
+    private final ConcertRankingService rankingService;
 
     @GetMapping("/{concertId}/dates")
     @Operation(summary = "콘서트 날짜 조회", description = "콘서트 ID에 해당하는 공연 날짜 목록을 조회합니다.")
@@ -49,7 +57,7 @@ public class ConcertController {
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
-    @GetMapping("/concerts/rankings")
+    @GetMapping("/rankings")
     @Operation(summary = "콘서트 예약 랭킹 조회", description = "예약 확정/취소 이벤트를 기반으로 집계된 콘서트 랭킹을 조회합니다.")
     public ResponseEntity<ApiResponse<ConcertRankingResponse>> rankings(
             @Parameter(description = "조회할 랭킹 개수") @RequestParam(defaultValue = "10") int limit

@@ -6,16 +6,21 @@ import kr.hhplus.be.server.tokenqueue.domain.model.TokenQueue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.Instant;
+/**
+ * Implements the token queue use case and coordinates transactional work.
+ */
 
 @Service
 @RequiredArgsConstructor
 public class TokenQueueUseCaseImpl implements TokenQueueUseCase {
     private final TokenQueueRepositoryPort tokenQueueRepository;
+    private final Clock clock;
 
     @Override
     public void enqueueUser(String userId) {
-        TokenQueue tokenQueue = new TokenQueue(userId, Instant.now().toEpochMilli());
+        TokenQueue tokenQueue = new TokenQueue(userId, Instant.now(clock).toEpochMilli());
         tokenQueueRepository.addUser(tokenQueue);
     }
 

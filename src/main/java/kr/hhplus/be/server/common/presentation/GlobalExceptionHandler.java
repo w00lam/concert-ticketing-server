@@ -8,12 +8,19 @@ import kr.hhplus.be.server.common.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.Comparator;
+import java.util.List;
+
+/**
+ * Converts application and Spring MVC exceptions into common API error responses.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -34,7 +41,22 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidation(MethodArgumentNotValidException exception) {
-        return error(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_REQUEST_FIELD, "요청 필드 값이 올바르지 않습니다.");
+        List<ApiErrorResponse.ErrorDetail> errors = exception.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .sorted(Comparator.comparing(FieldError::getField))
+                .map(fieldError -> new ApiErrorResponse.ErrorDetail(
+                        fieldError.getField(),
+                        fieldError.getDefaultMessage()
+                ))
+                .toList();
+
+        return error(
+                HttpStatus.BAD_REQUEST,
+                ErrorCode.INVALID_REQUEST_FIELD,
+                "요청 필드 값이 올바르지 않습니다.",
+                errors
+        );
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -58,12 +80,20 @@ public class GlobalExceptionHandler {
     }
 
     private ResponseEntity<ApiErrorResponse> error(HttpStatus status, RuntimeException exception) {
-        // Domain exceptions expose stable codes without leaking framework details.
         var errorCode = ((CodedException) exception).errorCode();
         return error(status, errorCode, exception.getMessage());
     }
 
     private ResponseEntity<ApiErrorResponse> error(HttpStatus status, ErrorCode errorCode, String message) {
-        return ResponseEntity.status(status).body(ApiErrorResponse.of(status, errorCode, message));
+        return error(status, errorCode, message, List.of());
+    }
+
+    private ResponseEntity<ApiErrorResponse> error(
+            HttpStatus status,
+            ErrorCode errorCode,
+            String message,
+            List<ApiErrorResponse.ErrorDetail> errors
+    ) {
+        return ResponseEntity.status(status).body(ApiErrorResponse.of(status, errorCode, message, errors));
     }
 }

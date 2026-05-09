@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.user.domain.model;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.common.domain.AmountValidator;
 import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
-import kr.hhplus.be.server.common.exception.ClientInputException;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,8 +15,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 @Table(
         name = "users",
@@ -25,6 +25,9 @@ import java.util.UUID;
                 @Index(name = "idx_deleted_email", columnList = "deleted, email")
         }
 )
+/**
+ * Represents core state and rules in the user domain.
+ */
 public class User {
     @Id
     @GeneratedValue
@@ -55,19 +58,23 @@ public class User {
     @Column(nullable = false)
     private boolean deleted = false;
 
+    public static User create(String email, String name) {
+        return User.builder()
+                .email(email)
+                .name(name)
+                .points(0)
+                .deleted(false)
+                .build();
+    }
+
     public void addPoints(int amount) {
-        validateNonNegativeAmount(amount);
+        AmountValidator.requireNonNegative(amount);
         this.points += amount;
     }
 
     public void deductPoints(int amount) {
-        validateNonNegativeAmount(amount);
+        AmountValidator.requireNonNegative(amount);
         if (this.points < amount) throw new BusinessRuleViolationException(ErrorCode.INSUFFICIENT_POINTS, "포인트가 부족합니다.");
         this.points -= amount;
-    }
-
-    private void validateNonNegativeAmount(int amount) {
-        // Point balance adjustments can be zero, but negative changes must use explicit charge/deduct flows.
-        if (amount < 0) throw new ClientInputException(ErrorCode.AMOUNT_MUST_BE_NON_NEGATIVE, "금액은 음수일 수 없습니다.");
     }
 }

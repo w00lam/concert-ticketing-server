@@ -4,10 +4,11 @@ import kr.hhplus.be.server.concert.application.port.in.concertdate.GetConcertDat
 import kr.hhplus.be.server.concert.application.port.in.concertdate.GetConcertDatesResult;
 import kr.hhplus.be.server.concert.application.port.out.ConcertDateRepositoryPort;
 import kr.hhplus.be.server.concert.application.service.GetConcertDatesUseCaseImpl;
-import kr.hhplus.be.server.concert.domain.model.ConcertDate;
 import kr.hhplus.be.server.unit.BaseUnitTest;
-import org.junit.jupiter.api.*;
-import org.mockito.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,33 +25,27 @@ public class GetConcertDatesUseCaseImplTest extends BaseUnitTest {
     GetConcertDatesUseCaseImpl useCase;
 
     @Test
-    @DisplayName("공연 ID로 날짜 목록 조회 시 Result 리스트로 변환된다")
+    @DisplayName("공연 ID로 날짜 목록 조회 시 Result 리스트를 반환한다")
     void execute_success() {
-        // given
         UUID concertId = fixedUUID();
         GetConcertDatesQuery query = new GetConcertDatesQuery(concertId);
+        GetConcertDatesResult date1 = new GetConcertDatesResult(
+                fixedUUID(),
+                LocalDate.of(2030, 1, 1)
+        );
+        GetConcertDatesResult date2 = new GetConcertDatesResult(
+                fixedUUID2(),
+                LocalDate.of(2030, 1, 2)
+        );
 
-        ConcertDate date1 = ConcertDate.builder()
-                .id(fixedUUID())
-                .eventDate(LocalDate.of(2030, 1, 1))
-                .build();
+        when(concertDateRepositoryPort.findDateResultsByConcertId(concertId)).thenReturn(List.of(date1, date2));
 
-        ConcertDate date2 = ConcertDate.builder()
-                .id(fixedUUID2())
-                .eventDate(LocalDate.of(2030, 1, 2))
-                .build();
-
-        when(concertDateRepositoryPort.findDatesByConcertId(concertId)).thenReturn(List.of(date1, date2));
-
-        // when
         List<GetConcertDatesResult> results = useCase.execute(query);
 
-        // then
         assertEquals(2, results.size());
-        assertEquals(date1.getId(), results.get(0).concertDateId());
-        assertEquals(date1.getEventDate(), results.get(0).eventDate());
-
-        assertEquals(date2.getId(), results.get(1).concertDateId());
-        assertEquals(date2.getEventDate(), results.get(1).eventDate());
+        assertEquals(date1.concertDateId(), results.get(0).concertDateId());
+        assertEquals(date1.eventDate(), results.get(0).eventDate());
+        assertEquals(date2.concertDateId(), results.get(1).concertDateId());
+        assertEquals(date2.eventDate(), results.get(1).eventDate());
     }
 }

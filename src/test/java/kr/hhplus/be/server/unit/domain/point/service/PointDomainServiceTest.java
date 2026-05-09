@@ -3,49 +3,54 @@ package kr.hhplus.be.server.unit.domain.point.service;
 import kr.hhplus.be.server.point.domain.model.Point;
 import kr.hhplus.be.server.point.domain.model.PointType;
 import kr.hhplus.be.server.point.domain.service.PointDomainService;
-import kr.hhplus.be.server.user.domain.model.User;
 import kr.hhplus.be.server.unit.BaseUnitTest;
-import org.junit.jupiter.api.*;
+import kr.hhplus.be.server.user.domain.model.User;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PointDomainServiceTest extends BaseUnitTest {
     private final PointDomainService service = new PointDomainService();
 
     @Test
-    @DisplayName("createCharge: 양수 금액은 정상 생성")
-    void createCharge_valid() {
-        User user = User.builder().id(fixedUUID()).build();
-        Point point = service.createCharge(user, 1000);
+    @DisplayName("charge: 양수 금액은 충전 기록을 만들고 유저 포인트를 증가시킨다")
+    void charge_valid() {
+        User user = User.create("point-service@example.com", "point tester");
+
+        Point point = service.charge(user, 1000);
 
         assertNotNull(point);
         assertEquals(user, point.getUser());
         assertEquals(1000, point.getAmount());
         assertEquals(PointType.CHARGE, point.getType());
         assertFalse(point.isDeleted());
+        assertEquals(1000, user.getPoints());
     }
 
     @Test
-    @DisplayName("createCharge: 0 이하 금액은 예외 발생")
-    void createCharge_invalid() {
-        User user = User.builder().id(fixedUUID()).build();
+    @DisplayName("charge: 0 이하 금액은 예외가 발생한다")
+    void charge_invalid() {
+        User user = User.create("point-service-invalid@example.com", "point tester");
 
-        assertThrows(IllegalArgumentException.class, () -> service.createCharge(user, 0));
-        assertThrows(IllegalArgumentException.class, () -> service.createCharge(user, -100));
+        assertThrows(IllegalArgumentException.class, () -> service.charge(user, 0));
+        assertThrows(IllegalArgumentException.class, () -> service.charge(user, -100));
     }
 
     @Test
-    @DisplayName("calculateBalance: 삭제되지 않은 포인트 합산")
-    void calculateBalance_sum() {
-        User user = User.builder().id(fixedUUID()).build();
+    @DisplayName("deduct: 유저 포인트를 차감한다")
+    void deduct_valid() {
+        User user = User.builder()
+                .email("point-service-deduct@example.com")
+                .name("point tester")
+                .points(1000)
+                .build();
 
-        Point p1 = Point.builder().user(user).amount(1000).type(PointType.CHARGE).deleted(false).build();
-        Point p2 = Point.builder().user(user).amount(500).type(PointType.CHARGE).deleted(true).build(); // 삭제된 포인트
-        Point p3 = Point.builder().user(user).amount(200).type(PointType.CHARGE).deleted(false).build();
+        service.deduct(user, 400);
 
-        int balance = service.calculateBalance(List.of(p1, p2, p3));
-        assertEquals(1200, balance); // 1000 + 200
+        assertEquals(600, user.getPoints());
     }
 }

@@ -11,13 +11,14 @@ spring:
       port: 6380
 
   jpa:
+    generate-ddl: true
     hibernate:
       ddl-auto: update
     show-sql: true
     open-in-view: false
 
   kafka:
-    bootstrap-servers: ${spring.embedded.kafka.brokers}
+    bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
     consumer:
       group-id: test-group
       auto-offset-reset: earliest
@@ -25,6 +26,9 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
+    listener:
+      auto-startup: false
+      missing-topics-fatal: false
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

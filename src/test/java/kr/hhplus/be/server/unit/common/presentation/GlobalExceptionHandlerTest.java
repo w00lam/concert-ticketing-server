@@ -20,7 +20,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GlobalExceptionHandlerTest extends BaseUnitTest {
     private final GlobalExceptionHandler handler = new GlobalExceptionHandler();
@@ -28,36 +28,45 @@ public class GlobalExceptionHandlerTest extends BaseUnitTest {
     @Test
     @DisplayName("handleClientInput: returns bad request error response with stable code")
     void handleClientInput() {
-        var response = handler.handleClientInput(new ClientInputException(ErrorCode.REQUEST_BODY_REQUIRED, "요청 본문은 필수입니다."));
+        var response = handler.handleClientInput(
+                new ClientInputException(ErrorCode.REQUEST_BODY_REQUIRED, "요청 본문은 필수입니다.")
+        );
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(400, response.getBody().status());
         assertEquals("요청 본문은 필수입니다.", response.getBody().message());
         assertEquals(ErrorCode.REQUEST_BODY_REQUIRED.name(), response.getBody().code());
-        assertNull(response.getBody().data());
+        assertTrue(response.getBody().errors().isEmpty());
     }
 
     @Test
     @DisplayName("handleResourceNotFound: returns not found error response with stable code")
     void handleResourceNotFound() {
-        var response = handler.handleResourceNotFound(new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
+        var response = handler.handleResourceNotFound(
+                new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다.")
+        );
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("사용자를 찾을 수 없습니다.", response.getBody().message());
         assertEquals(ErrorCode.USER_NOT_FOUND.name(), response.getBody().code());
+        assertTrue(response.getBody().errors().isEmpty());
     }
 
     @Test
     @DisplayName("handleBusinessRuleViolation: returns conflict error response with stable code")
     void handleBusinessRuleViolation() {
-        var response = handler.handleBusinessRuleViolation(new BusinessRuleViolationException(ErrorCode.RESERVATION_ALREADY_CANCELLED, "이미 취소된 예약입니다."));
+        var response = handler.handleBusinessRuleViolation(
+                new BusinessRuleViolationException(ErrorCode.RESERVATION_ALREADY_CANCELLED, "이미 취소된 예약입니다.")
+        );
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals("이미 취소된 예약입니다.", response.getBody().message());
         assertEquals(ErrorCode.RESERVATION_ALREADY_CANCELLED.name(), response.getBody().code());
+        assertTrue(response.getBody().errors().isEmpty());
     }
 
     @Test
-    @DisplayName("handleValidation: returns invalid request field code")
+    @DisplayName("handleValidation: returns field errors")
     void handleValidation() throws NoSuchMethodException {
         Method method = ValidationFixture.class.getDeclaredMethod("validate", String.class);
         var methodParameter = new MethodParameter(method, 0);
@@ -70,6 +79,9 @@ public class GlobalExceptionHandlerTest extends BaseUnitTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("요청 필드 값이 올바르지 않습니다.", response.getBody().message());
         assertEquals(ErrorCode.INVALID_REQUEST_FIELD.name(), response.getBody().code());
+        assertEquals(1, response.getBody().errors().size());
+        assertEquals("name", response.getBody().errors().get(0).field());
+        assertEquals("must not be blank", response.getBody().errors().get(0).message());
     }
 
     @Test
@@ -82,6 +94,7 @@ public class GlobalExceptionHandlerTest extends BaseUnitTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("요청 본문을 읽을 수 없습니다.", response.getBody().message());
         assertEquals(ErrorCode.INVALID_REQUEST_BODY.name(), response.getBody().code());
+        assertTrue(response.getBody().errors().isEmpty());
     }
 
     @Test
@@ -94,6 +107,7 @@ public class GlobalExceptionHandlerTest extends BaseUnitTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("요청 파라미터 형식이 올바르지 않습니다.", response.getBody().message());
         assertEquals(ErrorCode.INVALID_REQUEST_PARAMETER.name(), response.getBody().code());
+        assertTrue(response.getBody().errors().isEmpty());
     }
 
     @Test
@@ -104,6 +118,7 @@ public class GlobalExceptionHandlerTest extends BaseUnitTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals("서버 내부 오류가 발생했습니다.", response.getBody().message());
         assertEquals(ErrorCode.INTERNAL_SERVER_ERROR.name(), response.getBody().code());
+        assertTrue(response.getBody().errors().isEmpty());
     }
 
     private static class ValidationFixture {

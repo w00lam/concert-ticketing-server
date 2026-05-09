@@ -16,11 +16,7 @@ public class ConcertDateTest extends BaseUnitTest {
     @Test
     @DisplayName("ConcertDate.create initializes required fields")
     void testConcertDateCreate() {
-        Concert concert = Concert.builder()
-                .id(fixedUUID())
-                .title("Test Concert")
-                .description("Test Description")
-                .build();
+        Concert concert = Concert.create("Test Concert", "Test Description");
         LocalDate eventDate = LocalDate.of(2025, 12, 25);
 
         ConcertDate concertDate = ConcertDate.create(concert, eventDate);

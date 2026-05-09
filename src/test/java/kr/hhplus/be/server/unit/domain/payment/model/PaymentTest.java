@@ -8,6 +8,9 @@ import kr.hhplus.be.server.unit.BaseUnitTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
+import java.time.ZoneId;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,6 +34,30 @@ public class PaymentTest extends BaseUnitTest {
         assertEquals(PaymentMethod.CARD, payment.getMethod());
         assertEquals(PaymentStatus.PENDING, payment.getStatus());
         assertNull(payment.getPaidAt());
+        assertFalse(payment.isDeleted());
+        assertNull(payment.getCreatedAt());
+        assertNull(payment.getUpdatedAt());
+    }
+
+    @Test
+    @DisplayName("createPaid creates a paid payment")
+    void createPaid_shouldCreatePaidPayment() {
+        Reservation reservation = Reservation.builder()
+                .id(fixedUUID())
+                .build();
+        int amount = 40000;
+
+        ZoneId zone = ZoneId.systemDefault();
+        Clock clock = Clock.fixed(fixedNow().atZone(zone).toInstant(), zone);
+
+        Payment payment = Payment.createPaid(reservation, amount, PaymentMethod.CARD, clock);
+
+        assertNull(payment.getId());
+        assertEquals(reservation, payment.getReservation());
+        assertEquals(amount, payment.getAmount());
+        assertEquals(PaymentMethod.CARD, payment.getMethod());
+        assertEquals(PaymentStatus.PAID, payment.getStatus());
+        assertEquals(fixedNow(), payment.getPaidAt());
         assertFalse(payment.isDeleted());
         assertNull(payment.getCreatedAt());
         assertNull(payment.getUpdatedAt());
@@ -62,5 +89,18 @@ public class PaymentTest extends BaseUnitTest {
         assertFalse(payment.isDeleted());
         assertNull(payment.getCreatedAt());
         assertNull(payment.getUpdatedAt());
+    }
+
+    @Test
+    @DisplayName("hasSameRequest compares amount and method")
+    void hasSameRequest_shouldCompareAmountAndMethod() {
+        Payment payment = Payment.builder()
+                .amount(55000)
+                .method(PaymentMethod.CARD)
+                .build();
+
+        assertEquals(true, payment.hasSameRequest(55000, PaymentMethod.CARD));
+        assertEquals(false, payment.hasSameRequest(55001, PaymentMethod.CARD));
+        assertEquals(false, payment.hasSameRequest(55000, PaymentMethod.CASH));
     }
 }

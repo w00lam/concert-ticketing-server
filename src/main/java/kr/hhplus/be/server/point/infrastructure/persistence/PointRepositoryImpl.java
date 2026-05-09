@@ -5,18 +5,14 @@ import kr.hhplus.be.server.point.domain.model.Point;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.UUID;
+/**
+ * Implements the point repository output port with JPA.
+ */
 
 @Repository
 @RequiredArgsConstructor
 public class PointRepositoryImpl implements PointRepositoryPort {
     private final JpaPointRepository jpa;
-
-    @Override
-    public List<Point> findAllByUserId(UUID userId) {
-        return jpa.findAllByUser_Id(userId);
-    }
 
     @Override
     public Point save(Point point) {

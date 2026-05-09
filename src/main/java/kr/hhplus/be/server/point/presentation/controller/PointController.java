@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.hhplus.be.server.common.presentation.ApiResponse;
-import kr.hhplus.be.server.point.application.port.in.ChargePointCommand;
 import kr.hhplus.be.server.point.application.port.in.ChargePointUseCase;
 import kr.hhplus.be.server.point.application.port.in.GetPointQuery;
 import kr.hhplus.be.server.point.application.port.in.GetPointUseCase;
@@ -23,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+/**
+ * Handles HTTP requests for the point feature.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/points")
@@ -34,7 +36,7 @@ public class PointController {
     @PostMapping("/charge")
     @Operation(summary = "포인트 충전", description = "사용자에게 포인트를 충전합니다.")
     public ResponseEntity<ApiResponse<ChargePointResponse>> chargePoint(@Valid @RequestBody ChargePointRequest request) {
-        var result = chargePointUseCase.execute(new ChargePointCommand(request.userId(), request.amount()));
+        var result = chargePointUseCase.execute(request.toCommand());
         var response = ChargePointResponse.from(result);
 
         return ResponseEntity.ok(ApiResponse.ok(response));

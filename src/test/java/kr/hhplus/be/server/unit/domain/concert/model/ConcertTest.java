@@ -5,6 +5,8 @@ import kr.hhplus.be.server.concert.domain.model.Concert;
 import kr.hhplus.be.server.concert.domain.model.ConcertDate;
 import org.junit.jupiter.api.*;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ConcertTest extends BaseUnitTest {
@@ -12,14 +14,10 @@ public class ConcertTest extends BaseUnitTest {
     @DisplayName("Concert 객체 생성 시 Builder 필드 검증")
     void testConcertBuilderInitialization() {
         // when
-        Concert concert = Concert.builder()
-                .id(fixedUUID())
-                .title("Test Concert")
-                .description("Test Description")
-                .build();
+        Concert concert = Concert.create("Test Concert", "Test Description");
 
         // then
-        assertEquals(fixedUUID(), concert.getId());
+        assertNull(concert.getId());
         assertEquals("Test Concert", concert.getTitle());
         assertEquals("Test Description", concert.getDescription());
 
@@ -36,15 +34,9 @@ public class ConcertTest extends BaseUnitTest {
     @DisplayName("Concert에 ConcertDate 추가/삭제 기능 검증")
     void testAddAndRemoveConcertDate() {
         // given
-        Concert concert = Concert.builder()
-                .id(fixedUUID())
-                .title("Test Concert")
-                .description("Test Description")
-                .build();
+        Concert concert = Concert.create("Test Concert", "Test Description");
 
-        ConcertDate concertDate = ConcertDate.builder()
-                .id(fixedUUID())
-                .build();
+        ConcertDate concertDate = ConcertDate.create(concert, LocalDate.now());
 
         // when: add
         concert.addDate(concertDate);

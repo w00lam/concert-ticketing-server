@@ -1,4 +1,7 @@
 package kr.hhplus.be.server.common.exception;
+/**
+ * Defines detailed error codes used in API error responses.
+ */
 
 public enum ErrorCode {
     // Request payload or command value is invalid.
@@ -22,8 +25,10 @@ public enum ErrorCode {
 
     // Request is valid but blocked by current domain state.
     INSUFFICIENT_POINTS,
+    SEAT_ALREADY_RESERVED,
     RESERVATION_ALREADY_CANCELLED,
     RESERVATION_EXPIRED_OR_PROCESSED,
+    PAYMENT_ALREADY_PROCESSED,
 
     // Unexpected server-side failure.
     INTERNAL_SERVER_ERROR

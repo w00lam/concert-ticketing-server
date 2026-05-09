@@ -1,4 +1,7 @@
 package kr.hhplus.be.server.common.exception;
+/**
+ * Supports structured exception handling for common API errors.
+ */
 
 public class ResourceNotFoundException extends RuntimeException implements CodedException {
     private final ErrorCode errorCode;

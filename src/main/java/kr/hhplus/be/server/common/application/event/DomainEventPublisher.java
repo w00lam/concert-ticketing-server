@@ -1,0 +1,8 @@
+package kr.hhplus.be.server.common.application.event;
+/**
+ * Publishes domain events to the application event pipeline.
+ */
+
+public interface  DomainEventPublisher {
+    void publish(Object event);
+}

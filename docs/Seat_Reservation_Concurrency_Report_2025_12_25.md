@@ -47,28 +47,24 @@
 
 ### 구현 방식
 
-* Spring `@Scheduled(fixedRate = 60000)`로 1분마다 실행
-* 만료된 좌석 조회: `holdUntil < now`
-* 트랜잭션 적용: `@Transactional`
-* 좌석 상태 변경:
+* 좌석 테이블에는 임시 선점 상태를 저장하지 않음.
+* 임시 선점은 `reservations`의 `TEMP_HOLD` 상태와 `tempHoldExpiresAt`으로 판단.
+* 좌석 중복 예약 여부는 활성 예약 조건으로 조회.
 
-  * `held = false`
-  * `holdUntil = null`
+  * `CONFIRMED`
+  * `TEMP_HOLD` and `tempHoldExpiresAt > now`
+* 만료된 임시 예약은 활성 예약 조건에서 제외되어 새 예약을 막지 않음.
 
 ### 테스트
 
-* 좌석 생성 후 holdUntil을 과거로 설정
-* 스케줄러 실행 후 상태 검증
-
-  * `held == false`
-  * `holdUntil == null`
-* 테스트 코드: `SeatHoldReleaseSchedulerIT`
+* 동일 좌석 동시 예약 시 활성 예약은 1건만 생성되는지 검증.
+* 만료된 `TEMP_HOLD` 예약이 새 임시 예약을 막지 않는지 검증.
 
 ## 4. 결론
 
 * Pessimistic Locking으로 좌석 중복 배정 방지
 * 트랜잭션 범위 내 잔액 차감으로 결제 동시성 문제 해결
-* 스케줄러로 만료 좌석 자동 해제, 테스트로 검증 완료
+* 예약 만료 시각 기준으로 만료된 임시 예약을 활성 예약에서 제외
 
 ## 5. 참고
 

@@ -13,10 +13,10 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     open-in-view: false
-    generate-ddl: true
+    generate-ddl: false
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate.format_sql: true
       hibernate.timezone.default_storage: NORMALIZE_UTC

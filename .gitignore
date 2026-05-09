@@ -60,6 +60,8 @@ compose.override.yml
 
 ### Database exports and local secrets ###
 *.sql
+!docs/sql/
+!docs/sql/*.sql
 *.sqlite
 *.db
 *.pem

@@ -193,7 +193,7 @@ erDiagram
 | 필드                   | 타입                                         | 제약       |
 | -------------------- | ------------------------------------------ | -------- |
 | id                   | UUID                                       | PK       |
-| reservationId        | UUID                                       | FK       |
+| reservationId        | UUID                                       | FK, UNIQUE |
 | amount               | INT                                        | NOT NULL |
 | method               | VARCHAR(20)                                | NOT NULL |
 | status               | ENUM('PENDING','PAID','FAILED','CANCELED') | NOT NULL |
@@ -206,7 +206,7 @@ erDiagram
 - `ON DELETE RESTRICT` (예약 삭제를 결제로 제한)
 
 **추천 인덱스**
-- `(reservationId)`
+- `(reservationId)` unique, `uk_payment_reservation` (예약당 결제 1건 보장)
 - `(status)`
 
 ### QUEUE_TOKENS

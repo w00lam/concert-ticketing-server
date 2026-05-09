@@ -15,9 +15,7 @@ public class PointTest extends BaseUnitTest {
     @DisplayName("createCharge()는 충전 타입의 Point 엔티티를 생성해야 한다")
     void createCharge_shouldCreateChargePoint() {
         // given
-        User user = User.builder()
-                .id(fixedUUID())
-                .build();
+        User user = User.create("point-test@example.com", "point tester");
 
         int amount = 10000;
 
