@@ -13,12 +13,36 @@ components:
     ErrorResponse:
       type: object
       properties:
-        code:
+        status:
           type: integer
+          example: 400
         message:
           type: string
+          example: 요청 필드 값이 올바르지 않습니다.
+        code:
+          type: string
+          example: INVALID_REQUEST_FIELD
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
       required:
+        - status
+        - message
         - code
+        - errors
+
+    ErrorDetail:
+      type: object
+      properties:
+        field:
+          type: string
+          example: amount
+        message:
+          type: string
+          example: 0보다 커야 합니다.
+      required:
+        - field
         - message
 
     ConcertDate:
