@@ -165,6 +165,7 @@ docker compose up -d
 - [Load Test Plan](docs/load-test-plan.md)
 - [Local Development Guide](docs/local-dev-guide.md)
 - [Database Schema Migrations](docs/database-schema-migrations.md)
+- [Release Readiness Check](docs/release-readiness-check.md)
 - [OpenAPI Spec](docs/openapi.yml)
 
 ## Refactoring Highlights
