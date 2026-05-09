@@ -156,7 +156,7 @@ docker compose up -d
 
 ## Documentation
 
-- [Refactoring Notes](docs/portfolio-refactoring-notes.md)
+- [Technical Refactoring Notes](docs/technical-refactoring-notes.md)
 - [API Response Policy](docs/api-response-policy.md)
 - [ERD](docs/erd.md)
 - [Reservation Scenario](docs/ssd.md)
@@ -175,4 +175,4 @@ docker compose up -d
 - 동시성 테스트 공통 유틸 추출
 - 통합 테스트 fixture helper 정리
 - Kafka/Redis 통합 테스트의 검증 의도 강화
-- 포트폴리오 설명용 리팩토링 노트 추가
+- 주요 리팩토링 의사결정과 검증 포인트 문서화
