@@ -6,6 +6,7 @@ import kr.hhplus.be.server.reservation.application.service.ReservationConfirmati
 import kr.hhplus.be.server.reservation.domain.model.Reservation;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
 import kr.hhplus.be.server.unit.BaseUnitTest;
+import kr.hhplus.be.server.unit.fixture.ReservationFixture;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,11 +23,7 @@ public class ConfirmReservationUseCaseImplTest extends BaseUnitTest {
 
     @Test
     void execute_returnsConfirmedReservationResult() {
-        Reservation reservation = Reservation.builder()
-                .id(fixedUUID())
-                .status(ReservationStatus.CONFIRMED)
-                .confirmedAt(fixedNow())
-                .build();
+        Reservation reservation = ReservationFixture.confirmed(fixedUUID(), null, fixedNow());
 
         when(reservationConfirmationService.confirm(fixedUUID())).thenReturn(reservation);
 

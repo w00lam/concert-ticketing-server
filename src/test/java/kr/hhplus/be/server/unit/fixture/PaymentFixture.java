@@ -42,4 +42,11 @@ public final class PaymentFixture {
                 .status(PaymentStatus.PAID)
                 .build();
     }
+
+    public static Payment request(int amount, PaymentMethod method) {
+        return Payment.builder()
+                .amount(amount)
+                .method(method)
+                .build();
+    }
 }

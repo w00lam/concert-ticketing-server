@@ -48,4 +48,19 @@ public final class ReservationFixture {
                 .status(ReservationStatus.TEMP_HOLD)
                 .build();
     }
+
+    public static Reservation tempHold(LocalDateTime expiresAt) {
+        return Reservation.builder()
+                .status(ReservationStatus.TEMP_HOLD)
+                .tempHoldExpiresAt(expiresAt)
+                .deleted(false)
+                .build();
+    }
+
+    public static Reservation canceled() {
+        return Reservation.builder()
+                .status(ReservationStatus.CANCELED)
+                .deleted(true)
+                .build();
+    }
 }

@@ -5,6 +5,7 @@ import kr.hhplus.be.server.point.application.service.GetPointUseCaseImpl;
 import kr.hhplus.be.server.user.application.port.out.UserRepositoryPort;
 import kr.hhplus.be.server.user.domain.model.User;
 import kr.hhplus.be.server.unit.BaseUnitTest;
+import kr.hhplus.be.server.unit.fixture.UserFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,10 +29,7 @@ public class GetPointUseCaseImplTest extends BaseUnitTest {
     void execute_success() {
         UUID userId = fixedUUID();
         GetPointQuery query = new GetPointQuery(userId);
-        User user = User.builder()
-                .id(userId)
-                .points(1500)
-                .build();
+        User user = UserFixture.user(userId, 1500);
 
         when(userRepositoryPort.findById(userId)).thenReturn(user);
 

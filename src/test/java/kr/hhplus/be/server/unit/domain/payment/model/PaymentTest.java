@@ -5,6 +5,8 @@ import kr.hhplus.be.server.payment.domain.model.PaymentMethod;
 import kr.hhplus.be.server.payment.domain.model.PaymentStatus;
 import kr.hhplus.be.server.reservation.domain.model.Reservation;
 import kr.hhplus.be.server.unit.BaseUnitTest;
+import kr.hhplus.be.server.unit.fixture.PaymentFixture;
+import kr.hhplus.be.server.unit.fixture.ReservationFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,9 +22,7 @@ public class PaymentTest extends BaseUnitTest {
     @Test
     @DisplayName("createPending creates a pending payment")
     void createPending_shouldCreatePendingPayment() {
-        Reservation reservation = Reservation.builder()
-                .id(fixedUUID())
-                .build();
+        Reservation reservation = ReservationFixture.reservation(fixedUUID());
         int amount = 40000;
 
         Payment payment = Payment.createPending(reservation, amount, PaymentMethod.CARD);
@@ -42,9 +42,7 @@ public class PaymentTest extends BaseUnitTest {
     @Test
     @DisplayName("createPaid creates a paid payment")
     void createPaid_shouldCreatePaidPayment() {
-        Reservation reservation = Reservation.builder()
-                .id(fixedUUID())
-                .build();
+        Reservation reservation = ReservationFixture.reservation(fixedUUID());
         int amount = 40000;
 
         ZoneId zone = ZoneId.systemDefault();
@@ -64,21 +62,11 @@ public class PaymentTest extends BaseUnitTest {
     }
 
     @Test
-    @DisplayName("Builder sets all payment fields")
-    void builder_shouldSetAllFieldsCorrectly() {
-        Reservation reservation = Reservation.builder()
-                .id(fixedUUID())
-                .build();
+    @DisplayName("paid payment keeps payment details")
+    void paidPayment_shouldKeepDetails() {
+        Reservation reservation = ReservationFixture.reservation(fixedUUID());
 
-        Payment payment = Payment.builder()
-                .id(fixedUUID())
-                .reservation(reservation)
-                .amount(55000)
-                .method(PaymentMethod.CARD)
-                .status(PaymentStatus.PAID)
-                .paidAt(fixedNow())
-                .deleted(false)
-                .build();
+        Payment payment = PaymentFixture.paid(fixedUUID(), reservation, 55000, PaymentMethod.CARD, fixedNow());
 
         assertEquals(fixedUUID(), payment.getId());
         assertEquals(reservation, payment.getReservation());
@@ -94,10 +82,7 @@ public class PaymentTest extends BaseUnitTest {
     @Test
     @DisplayName("hasSameRequest compares amount and method")
     void hasSameRequest_shouldCompareAmountAndMethod() {
-        Payment payment = Payment.builder()
-                .amount(55000)
-                .method(PaymentMethod.CARD)
-                .build();
+        Payment payment = PaymentFixture.request(55000, PaymentMethod.CARD);
 
         assertEquals(true, payment.hasSameRequest(55000, PaymentMethod.CARD));
         assertEquals(false, payment.hasSameRequest(55001, PaymentMethod.CARD));

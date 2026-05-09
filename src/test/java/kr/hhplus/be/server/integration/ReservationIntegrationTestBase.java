@@ -77,9 +77,7 @@ public abstract class ReservationIntegrationTestBase {
 
     protected Seat createSeat() {
         Concert concert = concertRepository.save(
-                Concert.builder()
-                        .title("test concert")
-                        .build()
+                Concert.create("test concert")
         );
         ConcertDate concertDate = concertDateRepository.save(
                 ConcertDate.create(concert, LocalDate.now())
@@ -96,9 +94,7 @@ public abstract class ReservationIntegrationTestBase {
 
     protected ReservedSeat createReservedSeat(User user, String concertTitle) {
         Concert concert = concertRepository.save(
-                Concert.builder()
-                        .title(concertTitle)
-                        .build()
+                Concert.create(concertTitle)
         );
         ConcertDate concertDate = concertDateRepository.save(
                 ConcertDate.create(concert, LocalDate.now())

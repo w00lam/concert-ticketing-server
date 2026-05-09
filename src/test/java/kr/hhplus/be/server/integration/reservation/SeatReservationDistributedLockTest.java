@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.integration.reservation;
 
-import kr.hhplus.be.server.concert.domain.model.Concert;
 import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
 import kr.hhplus.be.server.integration.support.ConcurrencyTestSupport;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
@@ -18,7 +17,6 @@ public class SeatReservationDistributedLockTest extends ReservationIntegrationTe
     @DisplayName("동시에 여러 사용자가 동일 좌석 예약 시도 시 하나만 성공한다 (Redis 분산락)")
     void only_one_user_can_hold_seat_with_distributed_lock() throws Exception {
         int threadCount = 10;
-        var concert = Concert.builder().title("concert").build();
         var seat = createSeat();
 
         List<UUID> userIds = new ArrayList<>();
@@ -28,7 +26,7 @@ public class SeatReservationDistributedLockTest extends ReservationIntegrationTe
 
         var result = ConcurrencyTestSupport.runConcurrently(threadCount, index -> {
             try {
-                reserveSeat(userIds.get(index), concert.getId(), seat.getId());
+                reserveSeat(userIds.get(index), seat.getConcertDate().getConcert().getId(), seat.getId());
                 return true;
             } catch (Exception exception) {
                 return false;

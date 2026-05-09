@@ -3,23 +3,15 @@ package kr.hhplus.be.server.unit.application.reservation.model;
 import kr.hhplus.be.server.reservation.domain.model.Reservation;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
 import kr.hhplus.be.server.unit.BaseUnitTest;
+import kr.hhplus.be.server.unit.fixture.ReservationFixture;
 import org.junit.jupiter.api.Test;
-
-import java.time.Clock;
-import java.time.ZoneOffset;
 
 import static org.assertj.core.api.Assertions.*;
 
 public class ReservationTest extends BaseUnitTest {
     @Test
     void 예약을_생성하면_TEMP_HOLD_상태로_생성된다() {
-        // given
-        Clock clock = Clock.fixed(fixedNow().toInstant(ZoneOffset.UTC), ZoneOffset.UTC);
-
-        Reservation reservation = Reservation.builder()
-                .status(ReservationStatus.TEMP_HOLD)
-                .tempHoldExpiresAt(fixedNow().plusMinutes(10))
-                .build();
+        Reservation reservation = ReservationFixture.tempHold(fixedNow().plusMinutes(10));
 
         // then
         assertThat(reservation.getStatus()).isEqualTo(ReservationStatus.TEMP_HOLD);
@@ -28,11 +20,7 @@ public class ReservationTest extends BaseUnitTest {
 
     @Test
     void 예약을_취소하면_상태가_CANCELED가_되고_deleted가_true가_된다() {
-        // given
-        Reservation reservation = Reservation.builder()
-                .status(ReservationStatus.TEMP_HOLD)
-                .deleted(false)
-                .build();
+        Reservation reservation = ReservationFixture.tempHold(fixedUUID());
 
         // when
         reservation.cancel();
@@ -44,11 +32,7 @@ public class ReservationTest extends BaseUnitTest {
 
     @Test
     void 이미_취소된_예약을_다시_취소하면_예외가_발생한다() {
-        // given
-        Reservation reservation = Reservation.builder()
-                .status(ReservationStatus.CANCELED)
-                .deleted(true)
-                .build();
+        Reservation reservation = ReservationFixture.canceled();
 
         // when & then
         assertThatThrownBy(reservation::cancel)

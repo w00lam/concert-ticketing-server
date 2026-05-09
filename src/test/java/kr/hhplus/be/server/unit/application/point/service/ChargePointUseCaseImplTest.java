@@ -7,6 +7,7 @@ import kr.hhplus.be.server.point.application.service.ChargePointUseCaseImpl;
 import kr.hhplus.be.server.point.domain.model.Point;
 import kr.hhplus.be.server.point.domain.service.PointDomainService;
 import kr.hhplus.be.server.unit.BaseUnitTest;
+import kr.hhplus.be.server.unit.fixture.UserFixture;
 import kr.hhplus.be.server.user.application.port.out.UserRepositoryPort;
 import kr.hhplus.be.server.user.domain.model.User;
 import org.junit.jupiter.api.DisplayName;
@@ -39,12 +40,7 @@ public class ChargePointUseCaseImplTest extends BaseUnitTest {
         UUID userId = fixedUUID();
         int amount = 5000;
         ChargePointCommand command = new ChargePointCommand(userId, amount);
-        User user = User.builder()
-                .id(userId)
-                .email("test@example.com")
-                .name("Tester")
-                .points(1000)
-                .build();
+        User user = UserFixture.user(userId, 1000);
         Point createdPoint = Point.createCharge(user, amount);
 
         when(userRepositoryPort.findById(userId)).thenReturn(user);

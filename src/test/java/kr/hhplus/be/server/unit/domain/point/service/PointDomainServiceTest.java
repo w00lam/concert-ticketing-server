@@ -4,6 +4,7 @@ import kr.hhplus.be.server.point.domain.model.Point;
 import kr.hhplus.be.server.point.domain.model.PointType;
 import kr.hhplus.be.server.point.domain.service.PointDomainService;
 import kr.hhplus.be.server.unit.BaseUnitTest;
+import kr.hhplus.be.server.unit.fixture.UserFixture;
 import kr.hhplus.be.server.user.domain.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,11 +44,7 @@ public class PointDomainServiceTest extends BaseUnitTest {
     @Test
     @DisplayName("deduct: 유저 포인트를 차감한다")
     void deduct_valid() {
-        User user = User.builder()
-                .email("point-service-deduct@example.com")
-                .name("point tester")
-                .points(1000)
-                .build();
+        User user = UserFixture.user(fixedUUID(), 1000);
 
         service.deduct(user, 400);
 

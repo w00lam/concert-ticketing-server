@@ -26,9 +26,7 @@ public class SeatTempHoldConcurrencyTest extends ReservationIntegrationTestBase 
         User user1 = createUser();
         User user2 = createUser();
         User user3 = createUser();
-        Concert concert = Concert.builder()
-                .title("concert")
-                .build();
+        Concert concert = Concert.create("concert");
 
         ConcertDate concertDate = concertDateRepository.save(
                 ConcertDate.create(
