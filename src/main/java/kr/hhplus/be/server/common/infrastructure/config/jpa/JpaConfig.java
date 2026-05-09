@@ -16,9 +16,6 @@ import org.springframework.transaction.PlatformTransactionManager;
         "kr.hhplus.be.server.concert.infrastructure.persistence",
         "kr.hhplus.be.server.user.infrastructure.persistence"
 })
-/**
- * Provides Spring beans and infrastructure settings for infrastructure concerns.
- */
 public class JpaConfig {
 
     @Bean

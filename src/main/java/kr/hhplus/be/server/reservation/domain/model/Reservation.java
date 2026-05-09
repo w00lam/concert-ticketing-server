@@ -24,9 +24,6 @@ import java.util.UUID;
                 @Index(name = "idx_status_tempHoldExpiresAt", columnList = "status,tempHoldExpiresAt")
         }
 )
-/**
- * Represents core state and rules in the reservation domain.
- */
 public class Reservation {
     @Id
     @GeneratedValue

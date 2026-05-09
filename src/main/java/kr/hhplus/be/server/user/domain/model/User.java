@@ -25,9 +25,6 @@ import java.util.UUID;
                 @Index(name = "idx_deleted_email", columnList = "deleted, email")
         }
 )
-/**
- * Represents core state and rules in the user domain.
- */
 public class User {
     @Id
     @GeneratedValue

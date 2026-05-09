@@ -10,10 +10,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-/**
- * Represents core state and rules in the concert domain.
- */
-
 @Entity
 @Getter
 @Builder

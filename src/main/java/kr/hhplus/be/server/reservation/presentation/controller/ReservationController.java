@@ -21,9 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-/**
- * Handles HTTP requests for the reservation feature.
- */
 @RestController
 @RequestMapping("/reservations")
 @RequiredArgsConstructor

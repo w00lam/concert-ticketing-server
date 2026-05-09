@@ -25,9 +25,6 @@ import java.util.UUID;
         indexes = {
                 @Index(name = "idx_status", columnList = "status")
         })
-/**
- * Represents core state and rules in the payment domain.
- */
 public class Payment {
     @Id
     @GeneratedValue
