@@ -92,8 +92,8 @@ flowchart LR
 # 5. Redis (Cluster)
 
 ### 주요 역할
-- 분산 락(좌석 임시 배정 Lock)
-- **Seat Pending Assignment 저장** (TTL 기반 임시 점유)
+- 분산 락(동일 좌석 예약 요청 진입 제어)
+- 락 해제 원자성 보장(Lua compare-and-delete)
 - **대기열 토큰 저장**
 - 일부 API rate-limit 보조 용도
 
@@ -112,7 +112,7 @@ flowchart LR
 - Memory fragmentation
 
 ### 선정 이유
-- TTL + Lock + Queue Token 관리가 매우 빠르고 안정적
+- Lock + Queue Token 관리가 매우 빠르고 안정적
 - DB 로딩 없이 초고속 경쟁 제어 가능
 
 ---
@@ -235,7 +235,7 @@ flowchart LR
 ### 장애 시나리오 대응
 | 장애             | 대응 전략                            |
 | -------------- | -------------------------------- |
-| Redis Failover | Pending Seat TTL 보존, Lock 자동 재확립 |
+| Redis Failover | Lock 획득 실패/재시도 정책, Queue Token 복구 점검 |
 | DB Primary 장애  | Replica Auto-Promotion           |
 | Kafka Lag 증가   | Consumer scale-out               |
 | Deployment 문제  | Blue/Green 롤백                    |

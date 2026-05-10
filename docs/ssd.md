@@ -39,9 +39,10 @@ sequenceDiagram
 
 ---
 
-# 3. 좌석 예약 요청 (임시 배정: PENDING)
+# 3. 좌석 예약 요청 (임시 예약: TEMP_HOLD)
 
-좌석 충돌 방지를 위해 **Redis 분산락 + Redis PENDING Hold + DB Unique(seatId) 체크**를 함께 사용합니다.
+좌석 충돌 방지를 위해 **Redis 분산락 + 예약 테이블의 활성 예약 조건**을 함께 사용합니다.
+좌석 자체나 Redis에 임시 점유 상태를 저장하지 않고, `reservations.status`와 `tempHoldExpiresAt`으로 활성 예약 여부를 판단합니다.
 
 ```mermaid
 sequenceDiagram
@@ -58,54 +59,48 @@ sequenceDiagram
     App ->> Redis: TRY_LOCK("seat:{seatId}") with TTL(3 sec)
     Redis -->> App: Lock OK
 
-    Note over App,Redis: 2) 좌석 임시 배정(TTL 3분)
-    App ->> Redis: SETEX seat:{seatId}:pending = userId, TTL=180s
+    Note over App,DB: 2) 활성 예약 조건 검사
+    App ->> DB: SELECT active reservation by seatId
+    DB -->> App: none
 
-    Note over App,DB: 3) DB 예약 레코드 생성 (status=PENDING)
-    App ->> DB: INSERT INTO reservations(seat_id, user_id, status)
+    Note over App,DB: 3) DB 예약 레코드 생성 (status=TEMP_HOLD)
+    App ->> DB: INSERT INTO reservations(seat_id, user_id, status, tempHoldExpiresAt)
     DB -->> App: created
 
     App -->> API: 201 Created
     API -->> User: reservationId + expiresAt
 
-    Note over Redis: TTL 만료 → pending 자동 해제
+    Note over App,Redis: Lock release by compare-and-delete Lua script
 ```
 
 ---
 
 # 4. 결제 요청 → 승인 → 예약 확정
 
-결제는 **외부 PG**와 연동되며,
-결제 성공 후 **Kafka에 이벤트를 발행**하고
-Consumer가 Reservation 상태를 **CONFIRMED**로 업데이트합니다.
+결제는 사용자 포인트 차감, 예약 확정, 결제 생성을 하나의 트랜잭션 흐름에서 처리합니다.
+예약 확정 이벤트는 트랜잭션 커밋 이후 Kafka로 전달됩니다.
 
 ```mermaid
 sequenceDiagram
     participant User
     participant API as API Gateway
     participant App as App Server
-    participant PG as Payment Gateway
     participant Kafka as Kafka Producer
     participant Consumer as Reservation Consumer
     participant DB as PostgreSQL
-    participant Redis as Redis Cluster
 
     User ->> API: POST /payments
     API ->> App: Forward request
 
-    App ->> PG: Create Payment Intent (amount & seat info)
-    PG -->> App: Payment APPROVED
+    App ->> DB: Load reservation and user
+    App ->> DB: Deduct points
+    App ->> DB: Confirm reservation
+    App ->> DB: Insert payment
 
-    Note over App: 결제 성공 처리
+    Note over App: Transaction commit
 
-    App ->> Kafka: Publish "payment.succeeded" event
+    App ->> Kafka: Publish reservation confirmed event after commit
     Kafka -->> Consumer: Consume event
-
-    Consumer ->> DB: UPDATE reservations SET status='CONFIRMED'
-    DB -->> Consumer: OK
-
-    Consumer ->> Redis: DEL seat:{seatId}:pending
-    Redis -->> Consumer: OK
 
     App -->> API: 200 OK
     API -->> User: Payment Success + Seat Confirmed
@@ -115,19 +110,17 @@ sequenceDiagram
 
 # 5. 예약 실패 / 좌석 만료 흐름
 
-임시 배정 후 **3분 내 결제 실패 / 만료** 시 자리 자동 해제.
+임시 예약의 만료 여부는 `reservations.tempHoldExpiresAt`으로 판단합니다.
+만료된 `TEMP_HOLD` 예약은 활성 예약 조건에서 제외되므로 새 예약을 막지 않습니다.
 
 ```mermaid
 sequenceDiagram
-    participant Redis as Redis
     participant DB as PostgreSQL
 
-    Note over Redis: TTL(3분) 만료
+    Note over DB: tempHoldExpiresAt < now
 
-    Redis -->> Redis: Key seat:{seatId}:pending auto-delete
-
-    Redis ->> DB: UPDATE reservations SET status='EXPIRED' (optional batch process)
-    DB -->> Redis: OK
+    DB -->> DB: active reservation check excludes expired TEMP_HOLD
+    DB ->> DB: optional batch update status='EXPIRED'
 ```
 
 ---
@@ -225,7 +218,6 @@ sequenceDiagram
     participant App
     participant Redis
     participant DB
-    participant PG
     participant Kafka
     participant Consumer
 
@@ -236,17 +228,14 @@ sequenceDiagram
 
     User ->> API: 예약 시도(seatId)
     API ->> App: Forward
-    App ->> Redis: Lock + PENDING Hold (TTL)
-    App ->> DB: Create reservation(PENDING)
+    App ->> Redis: Seat lock
+    App ->> DB: Check active reservation
+    App ->> DB: Create reservation(TEMP_HOLD)
 
     User ->> API: 결제
-    App ->> PG: Process Payment
-    PG -->> App: APPROVED
-    App ->> Kafka: publish success
-
-    Consumer ->> DB: reservation=CONFIRMED
-    Consumer ->> Redis: delete PENDING
-    DB -->> Consumer: OK
+    App ->> DB: Deduct points + create payment
+    App ->> DB: payment + reservation=CONFIRMED
+    App ->> Kafka: publish reservation confirmed after commit
 
     App -->> User: 결제 + 예약 성공
 ```

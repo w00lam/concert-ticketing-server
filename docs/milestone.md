@@ -31,19 +31,19 @@ API, ERD, INFRA, SSD를 기반으로 기능, 배포, 테스트, 운영 단계를
 # 3. 🗓️ Week 3~4 – Reservation & Payment Flow 구현
 
 **목표**:
-- 좌석 임시 배정(PENDING) 및 예약 확정(COMPLETE) 구현
+- 좌석 임시 예약(TEMP_HOLD) 및 예약 확정(CONFIRMED) 구현
 - 결제 API 연동 및 MQ 기반 후처리 설계
-- Redis 기반 분산 락, TTL 임시 할당 적용
+- Redis 기반 분산 락, 예약 만료 시각 기반 활성 예약 조건 적용
 
 **주요 작업**:
 - Reservation Service 개발 (좌석 예약, 상태 전환)
 - Payment Service 개발 (PG 연동, Kafka 이벤트 발행)
-- Redis Seat Hold + Queue Token 구현
+- Redis Seat Lock + Queue Token 구현
 - SSD 기반 시퀀스 다이어그램 검증
 
 **검증/완료 기준**:
-- 임시 배정 → 결제 성공 시 예약 확정 흐름 정상 동작
-- TTL 만료 시 자동 PENDING 해제
+- 임시 예약 → 결제 성공 시 예약 확정 흐름 정상 동작
+- `tempHoldExpiresAt` 만료 시 활성 예약 조건에서 제외
 - Kafka 이벤트 처리 정상
 
 ---
@@ -73,11 +73,11 @@ Redis Sorted Set 기반 대기열 관리
 **목표**:
 - 프론트엔드 콘서트/날짜/좌석 UI 연동
 - 전체 예약/결제 플로우 통합 테스트
-- 임시 좌석 할당, 만료, 결제 실패/성공 시 상태 반영 확인
+- 임시 예약, 만료, 결제 실패/성공 시 상태 반영 확인
 
 **주요 작업**:
 - API 통합
-- 좌석 임시 배정 시 TTL 테스트
+- 좌석 임시 예약 만료 테스트
 - 결제 실패 시 롤백 검증
 - SSD 기반 End-to-End 시퀀스 점검
 
@@ -116,7 +116,7 @@ Redis Sorted Set 기반 대기열 관리
 - SSD 기반 운영 시퀀스 검증
 
 **주요 작업**:
-- Redis latency, seat hold TTL 체크
+- Redis latency, seat lock 동작 체크
 - Kafka lag 모니터링
 - DB replication lag 체크
 - 예약/결제 API 성능 테스트
@@ -171,8 +171,8 @@ gantt
 
 # 10. 🔑 Notes
 - 모든 ID는 **UUID** 사용
-- Seat/Reservation 상태 전환 **PENDING → CONFIRMED → PAID**
-- Redis 임시 할당 TTL 기반 Seat Hold
+- Reservation 상태 전환 **TEMP_HOLD → CONFIRMED / CANCELED / EXPIRED**
+- Redis 분산락 기반 동일 좌석 진입 제어
 - Kafka Event-driven 설계
 - DB 트랜잭션 + Redis Lock으로 중복 예약 방지
 - CI/CD → Staging → Production → Canary/Blue-Green 전략 적용
