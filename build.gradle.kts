@@ -75,6 +75,9 @@ tasks.register<Test>("integrationTest") {
     description = "Runs Spring context and infrastructure tests that require Docker/Testcontainers."
     group = "verification"
 
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+
     useJUnitPlatform()
     systemProperty("user.timezone", "UTC")
 
