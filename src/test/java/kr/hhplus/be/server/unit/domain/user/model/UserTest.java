@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.unit.domain.user.model;
 
+import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
+import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.unit.BaseUnitTest;
 import kr.hhplus.be.server.user.domain.model.User;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +50,10 @@ public class UserTest extends BaseUnitTest {
     void testDeductPointsInsufficient() {
         User user = userWithPoints(5);
 
-        assertThrows(IllegalStateException.class, () -> user.deductPoints(10));
+        BusinessRuleViolationException exception =
+                assertThrows(BusinessRuleViolationException.class, () -> user.deductPoints(10));
+
+        assertEquals(ErrorCode.INSUFFICIENT_POINTS, exception.errorCode());
     }
 
     private User userWithPoints(int points) {

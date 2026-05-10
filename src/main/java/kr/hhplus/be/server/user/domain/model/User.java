@@ -2,8 +2,6 @@ package kr.hhplus.be.server.user.domain.model;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.domain.AmountValidator;
-import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
-import kr.hhplus.be.server.common.exception.ErrorCode;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -71,7 +69,7 @@ public class User {
 
     public void deductPoints(int amount) {
         AmountValidator.requireNonNegative(amount);
-        if (this.points < amount) throw new BusinessRuleViolationException(ErrorCode.INSUFFICIENT_POINTS, "포인트가 부족합니다.");
+        if (this.points < amount) throw UserExceptions.insufficientPoints();
         this.points -= amount;
     }
 }
