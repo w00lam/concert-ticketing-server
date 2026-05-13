@@ -3,7 +3,6 @@ package kr.hhplus.be.server.integration.reservation;
 import kr.hhplus.be.server.common.exception.BusinessRuleViolationException;
 import kr.hhplus.be.server.integration.ReservationIntegrationTestBase;
 import kr.hhplus.be.server.integration.support.ConcurrencyTestSupport;
-import kr.hhplus.be.server.payment.application.port.in.MakePaymentCommand;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
 import kr.hhplus.be.server.user.domain.model.User;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ public class PaymentConcurrencyIntegrationTest extends ReservationIntegrationTes
     void concurrentSamePaymentRequest_createsOnePaymentAndDeductsPointsOnce() throws Exception {
         User user = createUserWithPoints(10_000);
         UUID reservationId = createReservedSeatId(user, "payment concurrency concert");
-        MakePaymentCommand command = cardPaymentCommand(reservationId, 5_000);
+        var command = cardPaymentCommand(reservationId, 5_000);
 
         int threadCount = 5;
         var result = ConcurrencyTestSupport.runConcurrently(threadCount, index -> {
