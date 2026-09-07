@@ -8,24 +8,26 @@ import kr.hhplus.be.server.integration.support.ConcurrencyTestSupport;
 import kr.hhplus.be.server.reservation.domain.model.ReservationStatus;
 import kr.hhplus.be.server.user.domain.model.User;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class SeatTempHoldConcurrencyTest extends ReservationIntegrationTestBase {
-    @Test
-    @DisplayName("동일 좌석에 대해 동시에 예약 요청 시 임시 배정은 1건만 성공한다")
-    void reserve_seat_concurrently() throws Exception {
-        User user1 = createUser();
-        User user2 = createUser();
-        User user3 = createUser();
+    @ParameterizedTest(name = "동일 좌석 동시 요청 {0}건에서 임시 배정은 1건만 성공한다")
+    @ValueSource(ints = {100, 500})
+    void reserve_seat_concurrently(int threadCount) throws Exception {
+        List<User> users = IntStream.range(0, threadCount)
+                .mapToObj(index -> createUser())
+                .toList();
         Concert concert = Concert.create("concert");
 
         ConcertDate concertDate = concertDateRepository.save(
@@ -37,8 +39,6 @@ public class SeatTempHoldConcurrencyTest extends ReservationIntegrationTestBase 
 
         Seat seat = createSeatWithConcert(concertDate, "A", "1", "1", "VIP");
         UUID seatId = seat.getId();
-        List<User> users = List.of(user1, user2, user3);
-        int threadCount = users.size();
 
         var result = ConcurrencyTestSupport.runConcurrently(threadCount, index -> {
             try {
