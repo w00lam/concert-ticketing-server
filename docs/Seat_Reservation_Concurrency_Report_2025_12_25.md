@@ -140,8 +140,17 @@
 - dequeue 후 대기열 길이: 0
 - 측정 처리량: 약 `4,382.99명/초`
 
-이 결과는 여러 실제 애플리케이션 인스턴스를 띄운 검증이 아니라, 하나의 테스트 프로세스에서 Redis에 동시에 접근한 결과입니다.
-따라서 애플리케이션 인스턴스 간 중복 입장 방지까지 검증했다고 해석하지 않으며, 처리량은 해당 실행 환경에서 측정한 관찰값입니다.
+추가로 같은 1,000명 큐를 준비한 뒤, 운영 코드의 `TokenQueueRepositoryImpl`을 사용하는 dequeue worker를 독립 JVM 2개에서 실행했습니다.
+각 JVM은 별도 Lettuce Redis 연결을 사용해 500명씩 `ZPOPMIN`을 호출했습니다.
+
+- `application_instances`: 2
+- `dequeue_per_instance`: 500
+- `dequeue_users`: 1,000
+- `dequeue_duplicates`: 0건
+- `queue_length_after_dequeue`: 0
+
+독립 JVM 2개 결과는 Redis의 원자적 `ZPOPMIN`이 프로세스 경계를 넘어 같은 사용자를 중복으로 꺼내지 않는다는 점을 확인합니다.
+다만 실제 HTTP 서버를 서로 다른 포트로 띄운 end-to-end 검증은 아니며, 처리량은 별도 측정하지 않았습니다.
 
 ## 8. 예약 확정 이벤트 전달 검증
 
