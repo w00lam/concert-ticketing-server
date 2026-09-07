@@ -157,7 +157,19 @@
 `KafkaPaymentIntegrationTest`에서 결제 완료 후 예약 확정 이벤트가 Embedded Kafka를 거쳐 Consumer까지 전달되는지 확인했습니다.
 예약 ID와 콘서트 ID가 일치하는 이벤트를 Consumer가 수신하는 조건을 통과했습니다.
 
-이번 검증은 이벤트 발행과 Consumer 전달까지만 포함합니다.
-Consumer 실패 시 재시도 횟수나 DLT 이관 동작은 이번 작업에서 구현하거나 검증하지 않았습니다.
+### Consumer 실패와 DLT 이관
+
+`KafkaErrorHandlingConfig`에 `DefaultErrorHandler`와 `DeadLetterPublishingRecoverer`를 적용했습니다.
+이번 검증 기준은 1초 간격 2회 재시도, 총 3회 전달 후 `reservation-confirmed-dlt` 이관입니다.
+
+`KafkaReservationFailureIntegrationTest`에서 외부 데이터 플랫폼 전송 실패를 강제로 발생시켰습니다.
+
+- Consumer 전달 시도: 3회
+- 재시도 횟수: 2회
+- DLT 이관 레코드: 1건
+- DLT 토픽: `reservation-confirmed-dlt`
+- DLT 예외 메시지 헤더: 원래 실패 메시지 포함
+
+2회라는 횟수는 이번 검증을 위한 기준이며, 외부 데이터 플랫폼의 SLA와 장애 지속 시간을 반영한 운영 정책으로 확정한 값은 아닙니다.
 일반 동시성 테스트를 Kafka broker 없이 실행할 때는 `AFTER_COMMIT` 이벤트 발행이 `localhost:9092` 연결 timeout을 로그로 남겼지만,
-좌석·결제 정합성 assertion은 통과했습니다. Kafka 전달 결과는 Embedded Kafka를 사용하는 별도 통합 테스트에서 확인했습니다.
+좌석·결제 정합성 assertion은 통과했습니다. Kafka 전달과 실패 복구 결과는 Embedded Kafka를 사용하는 별도 통합 테스트에서 확인했습니다.
