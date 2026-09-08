@@ -163,6 +163,7 @@ docker compose up -d
 - [Infrastructure](docs/infra.md)
 - [Performance Analysis](docs/performance-analysis.md)
 - [Load Test Plan](docs/load-test-plan.md)
+- [Queue k6 + Grafana Runbook](docs/queue-k6-grafana-runbook.md)
 - [Local Development Guide](docs/local-dev-guide.md)
 - [Database Schema Migrations](docs/database-schema-migrations.md)
 - [Release Readiness Check](docs/release-readiness-check.md)
