@@ -192,3 +192,16 @@
 2회라는 횟수는 이번 검증을 위한 기준이며, 외부 데이터 플랫폼의 SLA와 장애 지속 시간을 반영한 운영 정책으로 확정한 값은 아닙니다.
 일반 동시성 테스트를 Kafka broker 없이 실행할 때는 `AFTER_COMMIT` 이벤트 발행이 `localhost:9092` 연결 timeout을 로그로 남겼지만,
 좌석·결제 정합성 assertion은 통과했습니다. Kafka 전달과 실패 복구 결과는 Embedded Kafka를 사용하는 별도 통합 테스트에서 확인했습니다.
+
+## 9. 로컬 Kafka Compose smoke check (2026-09-08)
+
+로컬 Compose에서 사용하던 `bitnami/kafka:3.7` 이미지를 pull할 수 없어, 공식 Apache Kafka JVM 이미지인 `apache/kafka:3.9.1`로 교체했습니다.
+공식 이미지의 기본 단일 노드 KRaft 설정을 사용하고, 로컬 검증 스택에서는 Kafka 로그를 ephemeral storage로 둬 named volume 권한 충돌을 피했습니다.
+
+- broker image: `apache/kafka:3.9.1`
+- broker healthcheck: `healthy`
+- topic creation: `reservation-confirmed` 생성·조회 성공
+- Kafka 전달 테스트: `KafkaPaymentIntegrationTest` 통과
+- Kafka 실패·DLT 테스트: `KafkaReservationFailureIntegrationTest` 통과
+
+Compose 수정은 [`docker-compose.yml`](../docker-compose.yml)에 반영했습니다.
