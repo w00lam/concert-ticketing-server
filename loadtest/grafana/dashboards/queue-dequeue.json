@@ -20,11 +20,11 @@
       },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
       "id": 1,
-      "title": "Dequeue request rate",
-      "type": "timeseries",
+      "title": "Dequeue throughput (iterations/s)",
+      "type": "stat",
       "targets": [
         {
-          "expr": "sum(rate(k6_http_reqs_total{operation=\"dequeue\",testid=~\"$testid\"}[1m]))",
+          "expr": "max(k6_queue_dequeue_throughput{testid=~\"$testid\"})",
           "refId": "A"
         }
       ]

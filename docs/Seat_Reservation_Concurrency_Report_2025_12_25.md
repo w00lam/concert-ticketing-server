@@ -150,7 +150,26 @@
 - `queue_length_after_dequeue`: 0
 
 독립 JVM 2개 결과는 Redis의 원자적 `ZPOPMIN`이 프로세스 경계를 넘어 같은 사용자를 중복으로 꺼내지 않는다는 점을 확인합니다.
-다만 실제 HTTP 서버를 서로 다른 포트로 띄운 end-to-end 검증은 아니며, 처리량은 별도 측정하지 않았습니다.
+이 테스트 자체는 실제 HTTP 서버를 서로 다른 포트로 띄운 end-to-end 검증이나 HTTP 처리량 측정은 아니며, 아래 k6 검증으로 보완했습니다.
+
+### 두 HTTP 인스턴스 대상 k6 검증
+
+기존 `POST /queue/token/dequeue` 응답 형식(`ApiResponse<Void>`)은 유지한 채, 8080·8081 두 애플리케이션 인스턴스에 HTTP 요청을 분산했습니다.
+1,000명을 enqueue한 뒤 10개 VU가 총 1,000회의 dequeue를 수행했습니다.
+
+실행 ID: `queue-20260908-164011-final`
+
+- dequeue 요청: `1,000건`
+- dequeue 처리량: `3,378.38 req/s`
+- dequeue p95: `3.97ms`
+- dequeue p99: `4.88ms`
+- HTTP 실패율: `0%`
+- 인스턴스별 dequeue: `8080 = 539건`, `8081 = 461건`
+- dequeue 후 대기열 길이: `0`
+
+처리량은 enqueue 준비 구간을 제외하고 dequeue 시나리오 구간에서 계산한 값입니다.
+사용자별 중복 dequeue 여부는 `TokenQueueMultiInstanceIntegrationTest`가 사용자 ID를 수집해 별도로 검증하며, k6는 API 성능 지표를 수집합니다.
+재현 절차와 Grafana 대시보드 구성은 [`docs/queue-k6-grafana-runbook.md`](queue-k6-grafana-runbook.md)에 기록했습니다.
 
 ## 8. 예약 확정 이벤트 전달 검증
 

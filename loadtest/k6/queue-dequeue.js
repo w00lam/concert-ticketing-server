@@ -12,6 +12,7 @@ const TEST_ID = __ENV.TEST_ID || `queue-${Date.now()}`;
 
 const dequeueFailures = new Counter('queue_dequeue_failures');
 const queueLengthAfter = new Gauge('queue_length_after');
+const dequeueThroughput = new Gauge('queue_dequeue_throughput');
 
 export const options = {
     scenarios: {
@@ -56,7 +57,7 @@ export function setup() {
         userIds.push(userId);
     }
 
-    return { userIds };
+    return { userIds, scenarioStartedAt: Date.now() };
 }
 
 export default function () {
@@ -76,7 +77,10 @@ export default function () {
     }
 }
 
-export function teardown() {
+export function teardown(data) {
+    const elapsedMs = Math.max(Date.now() - data.scenarioStartedAt, 1);
+    dequeueThroughput.add(QUEUE_SIZE / (elapsedMs / 1000));
+
     const response = http.get(`${BASE_URLS[0]}/queue/token/length`, {
         tags: { operation: 'queue_length' },
     });

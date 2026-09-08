@@ -46,6 +46,7 @@ k6는 1,000명을 첫 번째 인스턴스의 enqueue API로 등록한 뒤, 10개
 
 ```powershell
 $env:K6_PROMETHEUS_RW_SERVER_URL = "http://localhost:9090/api/v1/write"
+$env:K6_PROMETHEUS_RW_PUSH_INTERVAL = "1s"
 $env:K6_PROMETHEUS_RW_TREND_STATS = "p(95),p(99),avg,max"
 $env:BASE_URLS = "http://localhost:8080,http://localhost:8081"
 $env:QUEUE_SIZE = "1000"
@@ -57,6 +58,7 @@ k6 run -o experimental-prometheus-rw --tag testid=$env:TEST_ID loadtest/k6/queue
 ## 4. 기록할 값
 
 - `http_reqs` 기준 dequeue 처리량
+- `queue_dequeue_throughput` 기준 시나리오 처리량
 - dequeue `p(95)`, `p(99)` 응답 시간
 - HTTP 실패율
 - `queue_length_after = 0`
