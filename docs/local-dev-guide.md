@@ -34,7 +34,7 @@ docker compose ps
 
 | Dependency | Address |
 | --- | --- |
-| MySQL | `localhost:3306` |
+| MySQL | `localhost:3307` (override with `MYSQL_HOST_PORT` / `MYSQL_PORT`) |
 | Redis | `localhost:6379` |
 | Kafka | `localhost:9092` |
 
